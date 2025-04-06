@@ -5,16 +5,14 @@ export default class Teacher {
     }
 
     getSchedule(allClassrooms) {
-        const schedule = [];
+        const DayWiseSchedule = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [] };
         for (const classroom of allClassrooms) {
-            const { room, schedule: dayWiseSchedule } = classroom;
-
-            for (const day in dayWiseSchedule) {
-                for (const entry of dayWiseSchedule[day]) {
+            const { room, schedule } = classroom;
+            for (const day in schedule) {
+                for (const entry of schedule[day]) {
                     if (entry.teacherCode === this.code) {
-                        schedule.push({
+                        DayWiseSchedule[day].push({
                             room,
-                            day,
                             time: entry.time,
                             subjectCode: entry.subjectCode,
                             subjectType: entry.subjectType
@@ -24,6 +22,6 @@ export default class Teacher {
             }
         }
 
-        return schedule;
+        return DayWiseSchedule;
     }
 }

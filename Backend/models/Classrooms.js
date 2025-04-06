@@ -3,4 +3,7 @@ export default class Classrooms {
         this.room = room;
         this.schedule = schedule;
     }
+    getClassroomSchedule() {
+        return this.schedule;
+    }
 }
