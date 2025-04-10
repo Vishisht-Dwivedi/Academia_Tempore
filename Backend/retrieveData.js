@@ -8,6 +8,11 @@ const getTeacherSchedule = (teacherCode) => {
     }
     return teacher.getSchedule(Rooms);
 };
+const getTeacherName = (teacherName) => {
+    return teachers.filter((teacher) => {
+        if (teacher.name.includes(teacherName)) return teacher;
+    });
+}
 
 const getClassroomSchedule = (room) => {
     const classroom = Rooms.find(r => r.room === room);
@@ -17,4 +22,9 @@ const getClassroomSchedule = (room) => {
     return classroom.getClassroomSchedule();
 };
 
-export default { getTeacherSchedule, getClassroomSchedule };
+const getClassrooms = (roomNo) => {
+    return Rooms
+        .filter((classroom) => classroom.room.includes(roomNo))
+        .map(({ room }) => ({ room }));
+};
+export default { getTeacherSchedule, getClassroomSchedule, getTeacherName, getClassrooms };
