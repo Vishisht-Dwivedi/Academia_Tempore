@@ -1,27 +1,42 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import Navbar from './components/Navbar/Navbar.jsx';
-import Hero from './components/Hero/Hero.jsx'
+import Hero from './components/Hero/Hero.jsx';
 import SearchForm from './components/Form/SearchForm.jsx';
-import React from 'react';
 import Footer from './components/Footer/Footer.jsx';
+import Schedule from './components/Schedule/Schedule.jsx';
 import './index.css';
-
 
 function App() {
   const [selected, setSelected] = useState(false);
   const [choice, setChoice] = useState(0);
+  const [scheduleData, setScheduleData] = useState(null);
+  const [showSchedule, setShowSchedule] = useState(false);
+
+  const handleSearchComplete = (data) => {
+    setScheduleData(data);      // data returned from SearchForm
+    setShowSchedule(true);      // switch to Schedule view
+  };
+
   return (
     <>
       <Navbar />
       <main>
-        {selected ?
-          <SearchForm choice={choice} setSelected={setSelected} setChoice={setChoice} /> :
+        {showSchedule ? (
+          <Schedule data={scheduleData} />
+        ) : selected ? (
+          <SearchForm
+            choice={choice}
+            setSelected={setSelected}
+            setChoice={setChoice}
+            onSearchComplete={handleSearchComplete}
+          />
+        ) : (
           <Hero setSelected={setSelected} setChoice={setChoice} />
-        }
+        )}
       </main>
       <Footer />
     </>
   );
 }
 
-export default App
+export default App;

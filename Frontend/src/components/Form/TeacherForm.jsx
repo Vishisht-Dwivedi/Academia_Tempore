@@ -1,24 +1,25 @@
 import React, { useEffect, useState, useMemo } from "react";
 import debounce from "lodash/debounce";
 
-const TeacherForm = () => {
+const TeacherForm = ({ onSearchComplete }) => {
     const [teacherName, setTeacherName] = useState('');
     const [teacherOptions, setTeacherOptions] = useState([]);
     const [teacherCode, setTeacherCode] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Debouncing to not call api every keystroke
-    const fetchTeachers = useMemo(() => debounce(async (name) => {
-        try {
-            const res = await fetch(`http://localhost:3000/teachers/allTeachers?name=${name}`);
-            const data = await res.json();
-            setTeacherOptions(data);
-        } catch (err) {
-            console.error("Error fetching teachers:", err);
-            setTeacherOptions([]);
-        }
-    }, 300), []);
+    const fetchTeachers = useMemo(() =>
+        debounce(async (name) => {
+            try {
+                const res = await fetch(`http://localhost:3000/teachers/allTeachers?name=${name}`);
+                const data = await res.json();
+                setTeacherOptions(data);
+            } catch (err) {
+                console.error("Error fetching teachers:", err);
+                setTeacherOptions([]);
+            }
+        }, 300), []
+    );
 
-    // runs on every state change
     useEffect(() => {
         if (teacherName.trim() !== '') {
             fetchTeachers(teacherName);
@@ -37,13 +38,24 @@ const TeacherForm = () => {
         }
     }, [teacherName, teacherOptions]);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!teacherCode) return;
+
+        setIsSubmitting(true);
+        try {
+            const res = await fetch(`http://localhost:3000/teachers?code=${teacherCode}`);
+            const data = await res.json();
+            onSearchComplete(data); // Pass data to App.jsx
+        } catch (err) {
+            console.error("Error fetching schedule:", err);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
-        <form
-            action="http://localhost:3000/teachers"
-            className="form-container"
-            method="GET"
-            target="_blank"
-        >
+        <form onSubmit={handleSubmit} className="form-container">
             <input
                 type="text"
                 id="teacher-name"
@@ -55,14 +67,12 @@ const TeacherForm = () => {
                 required
             />
 
-            {/* Hidden input... */}
             <input
                 type="hidden"
                 name="code"
                 value={teacherCode}
             />
 
-            {/* Suggestions */}
             {teacherOptions.length > 0 && (
                 <datalist id="name-suggestion-list">
                     {teacherOptions.map((teacher) => (
@@ -76,10 +86,10 @@ const TeacherForm = () => {
             <button
                 type="submit"
                 className="submit-button"
-                disabled={!teacherCode}
+                disabled={!teacherCode || isSubmitting}
                 title={!teacherCode ? "Please select a valid teacher name" : "Submit"}
             >
-                Submit
+                {isSubmitting ? "Loading..." : "Submit"}
             </button>
         </form>
     );
