@@ -1,8 +1,14 @@
-export default class Schedule {
-    constructor(time, subjectCode, subjectType, teacherCode) {
-        this.time = time; // array 
-        this.subjectCode = subjectCode;
-        this.subjectType = subjectType;
-        this.teacherCode = teacherCode;
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
+
+const ScheduleSchema = new Schema({
+    time: [Number],
+    subjectCode: String,
+    subjectType: String,
+    teacher: {
+        type: Schema.Types.ObjectId,
+        ref: "Teacher",
+        required: true
     }
-}
+});
+export default ScheduleSchema;

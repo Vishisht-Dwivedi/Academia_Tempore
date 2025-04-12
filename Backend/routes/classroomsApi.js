@@ -3,7 +3,7 @@ import retrieveData from "../retrieveData.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    let room = req.query.room;
+    let room = req.query.code;
     if (!room) {
         res.status(400).send("Missing room number in query");
     }

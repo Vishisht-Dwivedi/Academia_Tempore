@@ -1,27 +1,38 @@
-export default class Teacher {
-    constructor(code, name) {
-        this.code = code;
-        this.name = name;
-    }
+import mongoose from "mongoose";
+const Schema = mongoose.Schema;
+//Schema and models
+const TeacherSchema = new Schema({
+    name: String,
+    code: {
+        type: String,
+        unique: true
+    },
+    classes: [{
+        type: Schema.Types.ObjectId,
+        ref: "Classroom"
+    }]
+});
 
-    getSchedule(allClassrooms) {
-        const DayWiseSchedule = { Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [] };
-        for (const classroom of allClassrooms) {
-            const { room, schedule } = classroom;
-            for (const day in schedule) {
-                for (const entry of schedule[day]) {
-                    if (entry.teacherCode === this.code) {
-                        DayWiseSchedule[day].push({
-                            room,
-                            time: entry.time,
-                            subjectCode: entry.subjectCode,
-                            subjectType: entry.subjectType
-                        });
-                    }
-                }
-            }
-        }
-
-        return DayWiseSchedule;
+const TeacherModel = mongoose.model("Teacher", TeacherSchema);
+//Add
+const addNewTeacher = async ({ code, name }) => {
+    const existingTeacher = await TeacherModel.findOne({ code });
+    if (!existingTeacher) {
+        const newTeacher = new TeacherModel({ code, name });
+        await newTeacher.save();
+        return newTeacher;
+    } else {
+        return existingTeacher;
     }
+};
+//Get
+const getTeacherByCode = async (code) => {
+    return await TeacherModel.findOne({ code });
 }
+const getTeacherByID = async (_id) => {
+    return await TeacherModel.findById({ _id });
+}
+const getAllTeachers = async () => {
+    return await TeacherModel.find({});
+}
+export { addNewTeacher, getTeacherByCode, getTeacherByID, getAllTeachers, TeacherModel };

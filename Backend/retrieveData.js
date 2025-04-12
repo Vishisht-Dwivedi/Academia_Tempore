@@ -1,30 +1,23 @@
-import Rooms from './data/classroom_schedule.js';
-import teachers from './data/teachers.js';
-
-const getTeacherSchedule = (teacherCode) => {
-    const teacher = teachers.find(t => t.code === teacherCode);
-    if (!teacher) {
-        throw new Error(`No teacher found with code: ${teacherCode}`);
-    }
-    return teacher.getSchedule(Rooms);
-};
-const getTeacherName = (teacherName) => {
-    return teachers.filter((teacher) => {
-        if (teacher.name.includes(teacherName)) return teacher;
-    });
+import mongoose from "mongoose";
+import { getAllClassrooms, getClassroom } from "./models/Classrooms.js";
+import { getAllTeachers, getTeacherByCode } from "./models/Teachers.js";
+try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
+    console.log("Connected to Database");
+} catch (error) {
+    console.error("Error connecting to database:", error);
+    process.exit(1);
+}
+const TeacherNames = async () => {
+    const teachers = await getAllTeachers();
+    return teachers.map((teacher) => {
+        return { name: teacher.name, code: teacher.code };
+    })
 }
 
-const getClassroomSchedule = (room) => {
-    const classroom = Rooms.find(r => r.room === room);
-    if (!classroom) {
-        throw new Error(`No classroom found with name: ${room}`);
-    }
-    return classroom.getClassroomSchedule();
-};
+const Classrooms = async () => {
+    return await getAllClassrooms();
+}
+TeacherNames();
+Classrooms();
 
-const getClassrooms = (roomNo) => {
-    return Rooms
-        .filter((classroom) => classroom.room.includes(roomNo))
-        .map(({ room }) => ({ room }));
-};
-export default { getTeacherSchedule, getClassroomSchedule, getTeacherName, getClassrooms };
