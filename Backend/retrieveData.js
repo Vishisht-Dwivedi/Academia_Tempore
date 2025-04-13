@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { getAllClassrooms, getClassroom } from "./models/Classrooms.js";
-import { getAllTeachers, getTeacherByCode } from "./models/Teachers.js";
+import { getAllTeachers, getTeacherByCode, getTeacherByName, getTeacherByID } from "./models/Teachers.js";
 try {
     await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
     console.log("Connected to Database");
@@ -18,6 +18,4 @@ const TeacherNames = async () => {
 const Classrooms = async () => {
     return await getAllClassrooms();
 }
-TeacherNames();
-Classrooms();
 

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getClassroomScheduleById } from "./Classrooms.js";
 const Schema = mongoose.Schema;
 //Schema and models
 const TeacherSchema = new Schema({
@@ -35,4 +36,30 @@ const getTeacherByID = async (_id) => {
 const getAllTeachers = async () => {
     return await TeacherModel.find({});
 }
-export { addNewTeacher, getTeacherByCode, getTeacherByID, getAllTeachers, TeacherModel };
+const getTeacherSchedule = async (code) => {
+    const Schedule = { "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": [], "Friday": [] };
+    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const teacher = await getTeacherByCode(code);
+
+    for (const classId of teacher.classes) {
+        const classSchedule = await getClassroomScheduleById(classId);
+        weekdays.forEach((day) => {
+            const dailySchedule = classSchedule.schedule[day];
+            dailySchedule.forEach((lecture) => {
+                if (String(lecture.teacher) === String(teacher._id)) {
+                    const { time, subjectCode, subjectType } = lecture;
+                    const slot = {
+                        time,
+                        subjectCode,
+                        subjectType,
+                        room: classSchedule.room
+                    }
+                    Schedule[day].push(slot);
+                };
+            });
+        });
+    }
+    return Schedule;
+}
+
+export { addNewTeacher, getAllTeachers, getTeacherSchedule, TeacherModel };

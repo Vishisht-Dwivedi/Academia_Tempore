@@ -1,13 +1,15 @@
 import express from "express";
-import retrieveData from "../retrieveData.js";
+import { getClassroom, getAllClassrooms } from "../models/Classrooms.js";
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
     let room = req.query.code;
     if (!room) {
         res.status(400).send("Missing room number in query");
     }
-    res.send(retrieveData.getClassroomSchedule(room));
+    const classroom = await getClassroom(room);
+    const schedule = classroom.schedule;
+    res.send(schedule);
 });
 
 router.get("/allClassrooms", async (req, res) => {
@@ -15,7 +17,15 @@ router.get("/allClassrooms", async (req, res) => {
     if (!classroom) {
         return res.status(400).send("Missing name in query");
     }
-    res.send(retrieveData.getClassrooms(classroom));
+    const allRooms = await getAllClassrooms();
+    const suggestions = allRooms.filter((room) =>
+        room.room.toLowerCase().includes(classroom.toLowerCase())
+    );
+    const nameSuggestions = suggestions.map((suggestion) => {
+        const { room } = suggestion;
+        return { room };
+    })
+    res.send(nameSuggestions);
 })
 
 export default router;

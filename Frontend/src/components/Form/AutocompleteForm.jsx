@@ -1,5 +1,11 @@
 import React from "react";
-import { useAutocompleteForm } from '../Utilities/Autocomplete'
+import { useAutocompleteForm } from "../Utilities/Autocomplete";
+
+const SubmitButton = () => (
+    <button type="submit" className="submit-button">
+        Submit
+    </button>
+);
 
 const AutocompleteForm = ({
     label,
@@ -22,7 +28,11 @@ const AutocompleteForm = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!selectedKey) return;
+
+        if (!selectedKey) {
+            alert("Please select a valid option from the suggestions.");
+            return;
+        }
 
         try {
             const res = await fetch(`${submitUrl}?code=${selectedKey}`);
@@ -36,6 +46,7 @@ const AutocompleteForm = ({
     return (
         <form onSubmit={handleSubmit} className="form-container">
             <label htmlFor={label}>{placeholder}</label>
+
             <input
                 type="text"
                 value={inputValue}
@@ -50,19 +61,13 @@ const AutocompleteForm = ({
 
             {options.length > 0 && (
                 <datalist id={datalistId}>
-                    {options.map(opt => (
+                    {options.map((opt) => (
                         <option key={extractKey(opt)} value={extractMatch(opt)} />
                     ))}
                 </datalist>
             )}
 
-            <button
-                type="submit"
-                disabled={!selectedKey || isLoading}
-                className="submit-button"
-            >
-                {isLoading ? "Loading..." : buttonText}
-            </button>
+            <SubmitButton />
         </form>
     );
 };

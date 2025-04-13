@@ -53,15 +53,13 @@ const addNewClassroom = async ({ room, schedule }) => {
 };
 //Get
 const getAllClassrooms = async () => {
-    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    let query = ClassroomsModel.find({});
-    weekdays.forEach(day => {
-        query = query.populate(`schedule.${day}.teacher`);
-    });
-    return await query;
+    return await ClassroomsModel.find({});
 };
 const getClassroom = async (room) => {
     return await ClassroomsModel.findOne({ room });
 }
+const getClassroomScheduleById = async (_id) => {
+    return await ClassroomsModel.findOne({ _id });
+}
 //export
-export { addNewClassroom, getAllClassrooms, getClassroom };
+export { addNewClassroom, getAllClassrooms, getClassroom, getClassroomScheduleById };

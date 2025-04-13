@@ -22,7 +22,7 @@ function App() {
       <Navbar />
       <main>
         {showSchedule ? (
-          <Schedule data={scheduleData} />
+          <Schedule data={scheduleData} setScheduleData={setScheduleData} setShowSchedule={setShowSchedule} setSelected={setSelected} setChoice={setChoice} />
         ) : selected ? (
           <SearchForm
             choice={choice}

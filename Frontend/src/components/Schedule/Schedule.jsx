@@ -1,9 +1,15 @@
 import './Schedule.css';
 
-const Schedule = ({ data }) => {
+const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoice }) => {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const lectureTimes = [9, 10, 11, 12, 13, 14, 15, 16];
-
+    console.log(data);
+    const back = () => {
+        setScheduleData(null);
+        setShowSchedule(false);
+        setSelected(false);
+        setChoice(false);
+    }
     return (
         <section className="schedule">
 
@@ -42,7 +48,7 @@ const Schedule = ({ data }) => {
                     );
                 })}
             </div>
-            <button type="button" className='back-btn-schedule'>Go Back</button>
+            <button type="button" className='back-btn-schedule' onClick={back}>Go Back</button>
         </section>
     );
 };
