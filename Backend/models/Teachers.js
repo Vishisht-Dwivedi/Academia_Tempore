@@ -37,7 +37,7 @@ const getAllTeachers = async () => {
     return await TeacherModel.find({});
 }
 const getTeacherSchedule = async (code) => {
-    const Schedule = { "Monday": [], "Tuesday": [], "Wednesday": [], "Thursday": [], "Friday": [] };
+    const Schedule = { "Monday": {}, "Tuesday": {}, "Wednesday": {}, "Thursday": {}, "Friday": {} };
     const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const teacher = await getTeacherByCode(code);
 
@@ -45,21 +45,14 @@ const getTeacherSchedule = async (code) => {
         const classSchedule = await getClassroomScheduleById(classId);
         weekdays.forEach((day) => {
             const dailySchedule = classSchedule.schedule[day];
-            dailySchedule.forEach((lecture) => {
-                if (String(lecture.teacher) === String(teacher._id)) {
-                    const { time, subjectCode, subjectType } = lecture;
-                    const slot = {
-                        time,
-                        subjectCode,
-                        subjectType,
-                        room: classSchedule.room
-                    }
-                    Schedule[day].push(slot);
-                };
-            });
+            for (let i = 1; i <= 8; i++) {
+                if (dailySchedule[`${i}`]?.teacher.toString() === teacher._id.toString()) {
+                    Schedule[day][i] = dailySchedule[`${i}`];
+                }
+            }
         });
     }
     return Schedule;
 }
 
-export { addNewTeacher, getAllTeachers, getTeacherSchedule, TeacherModel };
+export { addNewTeacher, getAllTeachers, getTeacherSchedule, TeacherModel, getTeacherByCode };

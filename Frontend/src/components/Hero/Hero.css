@@ -1,12 +1,12 @@
 .hero {
-    background: linear-gradient(135deg, #2c3e50, #1a252f);
-    color: white;
-    padding: 3rem 2rem;
+    background: linear-gradient(135deg, var(--bg-dark-blue), var(--bg-darker-blue));
+    color: var(--color-white);
+    padding: var(--padding-xl) var(--padding-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--padding-lg);
     min-height: 80vh;
 }
 
@@ -15,14 +15,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: var(--padding-lg);
 }
 
 .hero-content h2 {
-    font-size: 2rem;
+    font-size: var(--font-xl);
 }
 
-/* Middle Buttons */
 .hero-buttons {
     display: flex;
     gap: 1rem;
@@ -32,12 +31,12 @@
 .hero-buttons button {
     padding: 0.8rem 1.5rem;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     cursor: pointer;
     transition: all 0.3s ease;
     background: transparent;
-    color: white;
-    border: 2px solid white;
+    color: var(--color-white);
+    border: 2px solid var(--color-white);
 }
 
 .hero-buttons button:hover {
@@ -45,23 +44,22 @@
 }
 
 #hero-blue {
-    background: #3498db;
-    color: white;
+    background: var(--bg-blue-button);
+    color: var(--color-white);
     border: none;
 }
 
 #hero-blue:hover {
-    background: #2980b9;
+    background: var(--bg-blue-button-hover);
 }
 
-/* Hero Title */
 .hero h1 {
-    color: white;
+    color: var(--color-white);
 }
 
 @media (max-width: 768px) {
     .hero-section {
-        padding: 2rem 1rem;
+        padding: var(--padding-lg) var(--padding-md);
     }
 
     .primary-btn,

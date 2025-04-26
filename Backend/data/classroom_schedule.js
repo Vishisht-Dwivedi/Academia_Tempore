@@ -1,89 +1,88 @@
 import Schedule from "./scheduleConstructor.js";
 import Classrooms from "./classroomConstructor.js";
+
 const Theory = [
     new Classrooms("TC-105", {
-        Monday: [
-            new Schedule([9], "ITC", "Theory", "SS"),
-            new Schedule([10], "ADC", "Theory", "VB"),
-            new Schedule([11], "DBMS", "Theory", "VC"),
-            new Schedule([12], "COA", "Theory", "AKS")
-        ],
-        Tuesday: [
-            new Schedule([9], "SE", "Theory", "RK")
-        ],
-        Wednesday: [
-            new Schedule([9, 10], "COA", "Theory", "AKS"),
-            new Schedule([11], "DBMS", "Theory", "VC"),
-            new Schedule([12], "ITC", "Theory", "SS"),
-            new Schedule([13], "SE", "Theory", "RK")
-        ],
-        Thursday: [
-            new Schedule([9], "ITC", "Theory", "SS"),
-            new Schedule([10, 11], "ADC", "Theory", "VB"),
-            new Schedule([12], "DBMS", "Theory", "VC"),
-            new Schedule([13], "SE", "Theory", "RK")
-        ],
-        Friday: [
-            new Schedule([9], "ITC", "Theory", "SS"),
-            new Schedule([10], "ADC", "Theory", "VB")
-        ],
-        Saturday: [
-            new Schedule([9], "ED", "Theory", "NG")
-        ]
+        Monday: new Schedule([
+            { time: [1], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" },
+            { time: [2], subjectCode: "ADC", subjectType: "Theory", teacher: "VB" },
+            { time: [3], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [4], subjectCode: "COA", subjectType: "Theory", teacher: "AKS" }
+        ]),
+        Tuesday: new Schedule([
+            { time: [1], subjectCode: "SE", subjectType: "Theory", teacher: "RK" }
+        ]),
+        Wednesday: new Schedule([
+            { time: [1, 2], subjectCode: "COA", subjectType: "Theory", teacher: "AKS" },
+            { time: [3], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [4], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" },
+            { time: [5], subjectCode: "SE", subjectType: "Theory", teacher: "RK" }
+        ]),
+        Thursday: new Schedule([
+            { time: [1], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" },
+            { time: [2, 3], subjectCode: "ADC", subjectType: "Theory", teacher: "VB" },
+            { time: [4], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [5], subjectCode: "SE", subjectType: "Theory", teacher: "RK" }
+        ]),
+        Friday: new Schedule([
+            { time: [1], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" },
+            { time: [2], subjectCode: "ADC", subjectType: "Theory", teacher: "VB" }
+        ]),
+        Saturday: new Schedule([
+            { time: [1], subjectCode: "ED", subjectType: "Theory", teacher: "NG" }
+        ])
     }),
     new Classrooms("TC-104", {
-        Monday: [
-            new Schedule([9], "COA", "Theory", "RC"),
-            new Schedule([10], "ADC", "Theory", "VB"),
-            new Schedule([11], "ITC", "Theory", "SS"),
-            new Schedule([12], "DBMS", "Theory", "VC"),
-            new Schedule([13], "SE", "Theory", "RK")
-        ],
-        Tuesday: [
-            new Schedule([9], "COA", "Theory", "RC"),
-            new Schedule([10], "ITC", "Theory", "SS")
-        ],
-        Wednesday: [
-            new Schedule([9], "SE", "Theory", "RK"),
-            new Schedule([10], "ITC", "Theory", "SS")
-        ],
-        Thursday: [
-            new Schedule([9], "DBMS", "Theory", "VC"),
-            new Schedule([10], "ADC", "Theory", "VB"),
-            new Schedule([11], "ADC", "Theory", "VB"),
-            new Schedule([12], "SE", "Theory", "RK"),
-            new Schedule([13], "ITC", "Theory", "SS")
-        ],
-        Friday: [
-            new Schedule([9], "DBMS", "Theory", "VC"),
-            new Schedule([10], "COA", "Theory", "RC"),
-            new Schedule([11], "ADC", "Theory", "VB")
-        ],
-        Saturday: [
-            new Schedule([9], "ED", "Theory", "NG")
-        ]
+        Monday: new Schedule([
+            { time: [1], subjectCode: "COA", subjectType: "Theory", teacher: "RC" },
+            { time: [3], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" },
+            { time: [4], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [5], subjectCode: "SE", subjectType: "Theory", teacher: "RK" }
+        ]),
+        Tuesday: new Schedule([
+            { time: [1], subjectCode: "COA", subjectType: "Theory", teacher: "RC" },
+            { time: [2], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" }
+        ]),
+        Wednesday: new Schedule([
+            { time: [1], subjectCode: "SE", subjectType: "Theory", teacher: "RK" },
+            { time: [2], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" }
+        ]),
+        Thursday: new Schedule([
+            { time: [1], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [4], subjectCode: "SE", subjectType: "Theory", teacher: "RK" },
+            { time: [5], subjectCode: "ITC", subjectType: "Theory", teacher: "SS" }
+        ]),
+        Friday: new Schedule([
+            { time: [1], subjectCode: "DBMS", subjectType: "Theory", teacher: "VC" },
+            { time: [2], subjectCode: "COA", subjectType: "Theory", teacher: "RC" },
+            { time: [3], subjectCode: "ADC", subjectType: "Theory", teacher: "VB" }
+        ]),
+        Saturday: new Schedule([
+            { time: [1], subjectCode: "ED", subjectType: "Theory", teacher: "NG" }
+        ])
     })
-]
+];
 
 const Labs = [
     new Classrooms("TC-101", {
-        Tuesday: [
-            new Schedule([11, 12], "SE", "Lab", "RK")
-        ],
-        Wednesday: [
-            new Schedule([11, 12], "COA", "Lab", "RC")
-        ]
+        Tuesday: new Schedule([
+            { time: [3, 4], subjectCode: "SE", subjectType: "Lab", teacher: "RK" }
+        ]),
+        Wednesday: new Schedule([
+            { time: [3, 4], subjectCode: "COA", subjectType: "Lab", teacher: "RC" }
+        ])
     }),
     new Classrooms("TC-201", {
-        Tuesday: [
-            new Schedule([11, 12], "DBMS", "Lab", "VC"),
-            new Schedule([14, 15], "COA", "Lab", "AKS")
-        ],
-        Friday: [
-            new Schedule([9, 10], "SE", "Lab", "RK"),
-            new Schedule([14, 15], "DBMS", "Lab", "VC")
-        ]
+        Tuesday: new Schedule([
+            { time: [3, 4], subjectCode: "DBMS", subjectType: "Lab", teacher: "VC" },
+            { time: [6, 7], subjectCode: "COA", subjectType: "Lab", teacher: "AKS" }
+        ]),
+        Friday: new Schedule([
+            { time: [1, 2], subjectCode: "SE", subjectType: "Lab", teacher: "RK" },
+            { time: [6, 7], subjectCode: "DBMS", subjectType: "Lab", teacher: "VC" }
+        ])
     })
 ];
+
 const Rooms = Theory.concat(Labs);
 export default Rooms;

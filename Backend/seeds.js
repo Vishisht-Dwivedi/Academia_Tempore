@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { addNewClassroom } from "./models/Classrooms.js";
-import { addNewTeacher, getTeacher } from "./models/Teachers.js";
+import { addNewTeacher, getTeacherByCode } from "./models/Teachers.js";
 import Rooms from "./data/classroom_schedule.js";
 import teachers from "./data/teachers.js";
 
@@ -15,23 +15,35 @@ try {
 for (const teacher of teachers) {
     await addNewTeacher(teacher);
 }
-
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-for (const classroom of Rooms) {
-    for (const day of days) {
-        const dailySchedule = classroom.schedule[day];
-        if (dailySchedule) {
-            for (const lecture of dailySchedule) {
-                const teacherDoc = await getTeacher(lecture.teacher);
-                lecture.teacher = teacherDoc._id;
+
+async function replaceTeachersWithIDs() {
+    for (const classroom of Rooms) {
+        for (const day of days) {
+            const dailySchedule = classroom.schedule[day];
+            if (dailySchedule) {
+                for (let i = 1; i <= 8; i++) {
+                    const slot = dailySchedule[i];
+                    if (slot && slot.teacher) {
+                        const teacherDoc = await getTeacherByCode(slot.teacher);
+                        if (teacherDoc) {
+                            slot.teacher = teacherDoc._id;
+                        } else {
+                            console.warn(`Teacher with code ${slot.teacher} not found.`);
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+await replaceTeachersWithIDs();
+for (const classroom of Rooms) {
     try {
         await addNewClassroom(classroom);
+        console.log("Inserted classroom:", classroom.room);
     } catch (err) {
-        console.log("error : ", err);
+        console.log("Error inserting classroom:", err);
     }
-
-    console.log("Inserted classroom:", classroom.room);
 }

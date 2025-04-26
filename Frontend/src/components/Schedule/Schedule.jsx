@@ -3,17 +3,18 @@ import './Schedule.css';
 const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoice }) => {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const lectureTimes = [9, 10, 11, 12, 13, 14, 15, 16];
-    console.log(data);
+
     const back = () => {
         setScheduleData(null);
         setShowSchedule(false);
         setSelected(false);
         setChoice(false);
-    }
+    };
+
     return (
         <section className="schedule">
-
             <div className="schedule-container">
+
                 {/* Header Row */}
                 <div className="row header">
                     <div className="cell header-cell">Day / Time</div>
@@ -24,20 +25,20 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
 
                 {/* Daily Rows */}
                 {days.map((day) => {
-                    const scheduled = data[day] || [];
+                    const scheduledDay = data[day] || {}; // Get the schedule for the current day
 
                     return (
                         <div key={day} className="row">
                             <div className="cell day-cell">{day}</div>
-                            {lectureTimes.map((time) => {
-                                const classHere = scheduled.find(cls => cls.time.includes(time));
+                            {lectureTimes.map((_, index) => {
+                                const slotIndex = (index + 1).toString(); // 1-based keys in your schema
+                                const classHere = scheduledDay[slotIndex];
 
                                 return (
-                                    <div key={`${day}-${time}`} className="cell">
+                                    <div key={`${day}-${slotIndex}`} className="cell">
                                         {classHere && (
                                             <div className={`class-box ${classHere.subjectType.toLowerCase()}`}>
                                                 <div>{classHere.subjectCode}</div>
-                                                <div>{classHere.room}</div>
                                                 <div>{classHere.subjectType}</div>
                                             </div>
                                         )}
@@ -48,6 +49,7 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
                     );
                 })}
             </div>
+
             <button type="button" className='back-btn-schedule' onClick={back}>Go Back</button>
         </section>
     );

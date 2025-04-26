@@ -1,13 +1,13 @@
 .site-footer {
-    color: white;
-    padding: 2rem;
+    color: var(--color-white);
+    padding: var(--padding-lg);
     margin-top: auto;
-    background-color: #222;
+    background-color: var(--color-black);
     font-family: Arial, sans-serif;
     text-align: center;
 }
 
 .site-footer p {
-    font-size: 1rem;
-    color: #bbb;
+    font-size: var(--font-base);
+    color: var(--color-muted);
 }
