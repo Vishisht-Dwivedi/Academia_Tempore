@@ -10,7 +10,9 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
         setSelected(false);
         setChoice(false);
     };
-
+    const edit = () => {
+        console.log("Clicked");
+    }
     return (
         <section className="schedule">
             <div className="schedule-container">
@@ -25,13 +27,13 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
 
                 {/* Daily Rows */}
                 {days.map((day) => {
-                    const scheduledDay = data[day] || {}; // Get the schedule for the current day
+                    const scheduledDay = data[day] || {};
 
                     return (
                         <div key={day} className="row">
                             <div className="cell day-cell">{day}</div>
                             {lectureTimes.map((_, index) => {
-                                const slotIndex = (index + 1).toString(); // 1-based keys in your schema
+                                const slotIndex = (index + 1).toString();
                                 const classHere = scheduledDay[slotIndex];
 
                                 return (
@@ -40,6 +42,7 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
                                             <div className={`class-box ${classHere.subjectType.toLowerCase()}`}>
                                                 <div>{classHere.subjectCode}</div>
                                                 <div>{classHere.subjectType}</div>
+                                                <div>{classHere?.room}</div>
                                             </div>
                                         )}
                                     </div>
@@ -51,6 +54,7 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
             </div>
 
             <button type="button" className='back-btn-schedule' onClick={back}>Go Back</button>
+            <button type="button" className='back-btn-schedule' onClick={edit}>Edit</button>
         </section>
     );
 };

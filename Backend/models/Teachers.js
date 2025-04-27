@@ -47,7 +47,8 @@ const getTeacherSchedule = async (code) => {
             const dailySchedule = classSchedule.schedule[day];
             for (let i = 1; i <= 8; i++) {
                 if (dailySchedule[`${i}`]?.teacher.toString() === teacher._id.toString()) {
-                    Schedule[day][i] = dailySchedule[`${i}`];
+                    Schedule[day][i] = dailySchedule[`${i}`].toObject();
+                    Schedule[day][i].room = classSchedule.room;
                 }
             }
         });

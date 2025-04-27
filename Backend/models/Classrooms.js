@@ -93,10 +93,54 @@ const getClassroomScheduleById = async (_id) => {
     return await ClassroomsModel.findById(_id);
 };
 
+// Update an existing classroom
+const updateClassroom = async (room, newSchedule) => {
+    const classroom = await ClassroomsModel.findOne({ room });
+    if (!classroom) {
+        throw new Error(`Classroom with room '${room}' not found`);
+    }
+    await checkForClashes(newSchedule);
+    const oldTeacherIds = new Set();
+    weekdays.forEach((day) => {
+        const daySchedule = classroom.schedule[day] || {};
+        Object.values(daySchedule).forEach((lecture) => {
+            if (lecture?.teacher) oldTeacherIds.add(lecture.teacher.toString());
+        });
+    });
+
+    const newTeacherIds = new Set();
+    weekdays.forEach((day) => {
+        const daySchedule = newSchedule[day] || {};
+        Object.values(daySchedule).forEach((lecture) => {
+            if (lecture?.teacher) newTeacherIds.add(lecture.teacher.toString());
+        });
+    });
+    classroom.schedule = newSchedule;
+    await classroom.save();
+    // Remove this classroom from old teachers who are no longer teaching here
+    for (const oldId of oldTeacherIds) {
+        if (!newTeacherIds.has(oldId)) {
+            await TeacherModel.findByIdAndUpdate(oldId, {
+                $pull: { classes: classroom._id },
+            });
+        }
+    }
+    for (const newId of newTeacherIds) {
+        await TeacherModel.findByIdAndUpdate(newId, {
+            $addToSet: { classes: classroom._id },
+        });
+    }
+
+    return classroom;
+};
+
+
+
 // Export all
 export {
     addNewClassroom,
     getAllClassrooms,
     getClassroom,
     getClassroomScheduleById,
+    updateClassroom
 };
