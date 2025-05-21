@@ -1,10 +1,24 @@
 import React from 'react';
-import './Footer.css'
+import { Box, Typography } from '@mui/material';
+
 const Footer = () => {
   return (
-    <footer className="site-footer">
-      <p>&copy; {new Date().getFullYear()} IIIT Bhopal. All Rights Reserved.</p>
-    </footer>
+    <Box
+      component="footer"
+      sx={{
+        width: '100%',
+        backgroundColor: 'black',
+        color: 'white',
+        py: 3,
+        mt: 'auto',
+        textAlign: 'center',
+        fontFamily: 'sans-serif',
+      }}
+    >
+      <Typography variant="body2" color="gray">
+        &copy; {new Date().getFullYear()} IIIT Bhopal. All Rights Reserved.
+      </Typography>
+    </Box>
   );
 };
 

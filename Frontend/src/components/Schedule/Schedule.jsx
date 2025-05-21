@@ -1,7 +1,17 @@
-import './Schedule.css';
+import {
+    Box,
+    Table,
+    TableHead,
+    TableBody,
+    TableRow,
+    TableCell,
+    Button,
+    Paper,
+    Typography,
+} from '@mui/material';
 
 const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoice }) => {
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const lectureTimes = [9, 10, 11, 12, 13, 14, 15, 16];
 
     const back = () => {
@@ -10,48 +20,126 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
         setSelected(false);
         setChoice(false);
     };
+
+    const CELL_SIZE = 100;
+
     return (
-        <section className="schedule">
-            <div className="schedule-container">
+        <Box
+            sx={{
+                width: '100%',
+                overflowX: 'auto',
+                padding: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        >
+            <Paper elevation={4} sx={{ minWidth: CELL_SIZE * 9 }}>
+                <Table
+                    stickyHeader
+                    sx={{
+                        tableLayout: 'fixed',
+                        minWidth: CELL_SIZE * 9,
+                        borderCollapse: 'collapse',
+                    }}
+                    aria-label="schedule table"
+                >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell
+                                align="center"
+                                sx={{
+                                    width: CELL_SIZE,
+                                    height: CELL_SIZE,
+                                    fontWeight: 'bold',
+                                    bgcolor: '#e0e0e0',
+                                    border: '1px solid #ccc',
+                                }}
+                            >
+                                Day / Time
+                            </TableCell>
+                            {lectureTimes.map((time) => (
+                                <TableCell
+                                    key={time}
+                                    align="center"
+                                    sx={{
+                                        width: CELL_SIZE,
+                                        height: CELL_SIZE,
+                                        fontWeight: 'bold',
+                                        bgcolor: '#e0e0e0',
+                                        border: '1px solid #ccc',
+                                    }}
+                                >
+                                    {time}:30
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
 
-                {/* Header Row */}
-                <div className="row header">
-                    <div className="cell header-cell">Day / Time</div>
-                    {lectureTimes.map((time) => (
-                        <div key={time} className="cell header-cell">{time}:30</div>
-                    ))}
-                </div>
+                    <TableBody>
+                        {days.map((day) => {
+                            const scheduledDay = data[day] || {};
+                            return (
+                                <TableRow key={day} sx={{ height: CELL_SIZE }}>
+                                    <TableCell
+                                        align="center"
+                                        sx={{
+                                            fontWeight: 'bold',
+                                            bgcolor: '#bbdefb',
+                                            border: '1px solid #ccc',
+                                            width: CELL_SIZE,
+                                            height: CELL_SIZE,
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        {day}
+                                    </TableCell>
+                                    {lectureTimes.map((_, index) => {
+                                        const slotIndex = (index + 1).toString();
+                                        const classHere = scheduledDay[slotIndex];
 
-                {/* Daily Rows */}
-                {days.map((day) => {
-                    const scheduledDay = data[day] || {};
+                                        return (
+                                            <TableCell
+                                                key={`${day}-${slotIndex}`}
+                                                align="center"
+                                                sx={{
+                                                    border: '1px solid #ccc',
+                                                    width: CELL_SIZE,
+                                                    height: CELL_SIZE,
+                                                    padding: '8px',
+                                                    whiteSpace: 'normal',
+                                                    wordBreak: 'break-word',
+                                                    verticalAlign: 'middle',
+                                                }}
+                                            >
+                                                {classHere ? (
+                                                    <>
+                                                        <Typography variant="subtitle2" fontWeight="bold">
+                                                            {classHere.subjectCode}
+                                                        </Typography>
+                                                        <Typography variant="body2">{classHere.subjectType}</Typography>
+                                                        <Typography variant="body2">{classHere.room}</Typography>
+                                                    </>
+                                                ) : null}
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </Paper>
 
-                    return (
-                        <div key={day} className="row">
-                            <div className="cell day-cell">{day}</div>
-                            {lectureTimes.map((_, index) => {
-                                const slotIndex = (index + 1).toString();
-                                const classHere = scheduledDay[slotIndex];
-
-                                return (
-                                    <div key={`${day}-${slotIndex}`} className="cell">
-                                        {classHere && (
-                                            <div className={`class-box ${classHere.subjectType.toLowerCase()}`}>
-                                                <div>{classHere.subjectCode}</div>
-                                                <div>{classHere.subjectType}</div>
-                                                <div>{classHere?.room}</div>
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    );
-                })}
-            </div>
-
-            <button type="button" className='back-btn-schedule' onClick={back}>Go Back</button>
-        </section>
+            <Button
+                variant="contained"
+                color="success"
+                sx={{ mt: 4, px: 4, py: 2 }}
+                onClick={back}
+            >
+                Go Back
+            </Button>
+        </Box>
     );
 };
 

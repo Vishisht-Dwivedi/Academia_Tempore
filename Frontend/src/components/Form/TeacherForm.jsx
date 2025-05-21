@@ -1,5 +1,6 @@
-import AutocompleteForm from "./AutocompleteForm";
 import React from "react";
+import AutocompleteForm from "./AutocompleteForm";
+
 const TeacherForm = ({ onSearchComplete }) => (
     <AutocompleteForm
         label="teacher-name"
@@ -12,6 +13,6 @@ const TeacherForm = ({ onSearchComplete }) => (
         onSubmitData={onSearchComplete}
         buttonText="Submit"
     />
-
 );
+
 export default TeacherForm;
