@@ -10,9 +10,6 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
         setSelected(false);
         setChoice(false);
     };
-    const edit = () => {
-        console.log("Clicked");
-    }
     return (
         <section className="schedule">
             <div className="schedule-container">
@@ -54,7 +51,6 @@ const Schedule = ({ data, setScheduleData, setShowSchedule, setSelected, setChoi
             </div>
 
             <button type="button" className='back-btn-schedule' onClick={back}>Go Back</button>
-            <button type="button" className='back-btn-schedule' onClick={edit}>Edit</button>
         </section>
     );
 };

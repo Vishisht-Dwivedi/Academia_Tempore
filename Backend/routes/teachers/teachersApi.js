@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllTeachers, getTeacherSchedule, getTeacherByCode } from "../../models/Teachers.js";
+import { getAllTeachers, getTeacherSchedule, getTeacherByCode } from "../../services/teacherService.js";
 const router = express.Router();
 
 router.get("/allTeachers", async (req, res) => {
