@@ -1,35 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import React, { useState } from "react"
+import Navbar from "./components/Navbar/Navbar.jsx"
+import Footer from "./components/Footer/Footer.jsx"
+import Hero from "./components/Hero/Hero.jsx"
+import AddClassroom from "./components/Classroom/AddClassroom.jsx"
+import AddTeacher from "./components/Teacher/AddTeacher.jsx"
+import UpdateClassroom from "./components/Classroom/UpdateClassroom.jsx"
+import UpdateTeacher from "./components/Teacher/UpdateTeacher.jsx"
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+  const [choice, setChoice] = useState(false);
+  return (<>
+    <Navbar />
+    {choiceSwitcher(choice, setChoice)}
+    <Footer />
+  </>
   )
+}
+const choiceSwitcher = (choice, setChoice) => {
+  switch (choice) {
+    case "addTeacher":
+      return <AddTeacher setChoice={setChoice} />
+    case "addClassroom":
+      return <AddClassroom setChoice={setChoice} />
+    case "updateTeacher":
+      return <UpdateTeacher setChoice={setChoice} />
+    case "updateClassroom":
+      return <UpdateClassroom setChoice={setChoice} />
+    default:
+      return <Hero setChoice={setChoice} choice={choice} />
+  }
 }
 
 export default App

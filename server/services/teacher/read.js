@@ -1,16 +1,5 @@
-import TeacherModel from "../models/Teachers.js";
-import { getClassroomScheduleById } from "./classroomService.js";
-
-const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
-const addNewTeacher = async ({ code, name }) => {
-    const existingTeacher = await TeacherModel.findOne({ code });
-    if (existingTeacher) return existingTeacher;
-
-    const newTeacher = new TeacherModel({ code, name });
-    await newTeacher.save();
-    return newTeacher;
-};
+import TeacherModel from "../../models/Teachers.js";
+import { getClassroomScheduleById } from "../classroom/classroomService.js";
 
 const getTeacherByCode = async (code) => {
     return await TeacherModel.findOne({ code });
@@ -24,6 +13,7 @@ const getAllTeachers = async () => {
     return await TeacherModel.find({});
 };
 
+const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const getTeacherSchedule = async (code) => {
     const teacher = await getTeacherByCode(code);
     if (!teacher) throw new Error("Teacher not found");
@@ -54,11 +44,4 @@ const getTeacherSchedule = async (code) => {
 
     return schedule;
 };
-
-export {
-    addNewTeacher,
-    getTeacherByCode,
-    getTeacherByID,
-    getAllTeachers,
-    getTeacherSchedule,
-};
+export { getTeacherByCode, getTeacherByID, getAllTeachers, getTeacherSchedule }

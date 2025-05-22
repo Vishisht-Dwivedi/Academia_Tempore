@@ -1,5 +1,5 @@
-import Schedule from "./scheduleConstructor.js";
-import Classrooms from "./classroomConstructor.js";
+import Schedule from "../constructors/scheduleConstructor.js";
+import Classrooms from "../constructors/classroomConstructor.js";
 
 const Theory = [
     new Classrooms("TC-105", {

@@ -1,7 +1,5 @@
 import express from "express";
-import { getClassroom, getAllClassrooms } from "../../services/classroomService.js";
-
-
+import { getClassroom, getAllClassrooms } from "../../services/classroom/classroomService.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {

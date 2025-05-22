@@ -1,4 +1,4 @@
-import Teacher from "./teacherConstructor.js";
+import Teacher from "../constructors/teacherConstructor.js";
 const teachers = [
     new Teacher("Dr. Varun Bajaj", "VB"),
     new Teacher("Dr. Ashish Kumar Sahu", "AKS"),

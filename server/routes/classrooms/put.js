@@ -1,5 +1,5 @@
 import express from "express";
-import { updateClassroom } from "../../services/classroomService.js";
+import { updateClassroom } from "../../services/classroom/classroomService.js";
 const router = express.Router();
 router.put("/put", (req, res) => {
     const room = req.query.code;

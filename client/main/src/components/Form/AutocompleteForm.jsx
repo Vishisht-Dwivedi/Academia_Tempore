@@ -1,4 +1,3 @@
-import React from "react";
 import {
     Autocomplete,
     TextField,
@@ -10,13 +9,11 @@ import {
 import { useAutocompleteForm } from "../Utilities/Autocomplete";
 
 const AutocompleteForm = ({
-    label,
     placeholder,
     fetchSuggestionsUrl,
     submitUrl,
     extractMatch,
     extractKey,
-    datalistId, // unused now, but keeping if needed for compatibility
     onSubmitData,
     buttonText = "Submit",
 }) => {
@@ -25,7 +22,6 @@ const AutocompleteForm = ({
         setInputValue,
         options,
         selectedKey,
-        setSelectedKey,
         isLoading,
     } = useAutocompleteForm(fetchSuggestionsUrl, extractMatch, extractKey);
 
