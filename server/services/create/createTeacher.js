@@ -3,12 +3,12 @@ import TeacherModel from "../../models/Teachers.js";
 import SubjectModel from "../../models/Subjects.js";
 import ClassroomModel from "../../models/Classrooms.js";
 
-export async function createTeacher(teacher) {
+export default async function createTeacher(teacher) {
     const { name, code, subjects = [], classes = [] } = { ...teacher };
 
     const existingTeacher = await TeacherModel.findOne({ code });
     if (existingTeacher) {
-        throw new Error("Teacher with this code already exists");
+        throw new Error(`Teacher with code: ${code} already exists`);
     }
 
     const validatedTeacher = new Teacher(name, code, classes, subjects);
@@ -56,5 +56,5 @@ export async function createTeacher(teacher) {
         { $addToSet: { teachers: savedTeacher._id } }
     );
 
-    return savedTeacher.lean();
+    return savedTeacher;
 }

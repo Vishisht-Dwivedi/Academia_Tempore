@@ -12,5 +12,5 @@ const subjects = [
     new Subject("COA", "Computer Organization and Architecture Lab", "Lab", []),
     new Subject("DBMS", "Database Management Systems Lab", "Lab", [])
 ];
-
+console.log(subjects);
 export default subjects;

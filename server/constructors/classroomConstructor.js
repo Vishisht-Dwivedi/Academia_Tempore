@@ -1,4 +1,4 @@
-import Schedule from "./scheduleConstructor";
+import Schedule from "./scheduleConstructor.js";
 
 export default class Classrooms {
     constructor(room, daySchedules = []) {

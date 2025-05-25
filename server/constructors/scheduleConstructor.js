@@ -1,4 +1,4 @@
-import Slot from "./slotConstructor";
+import Slot from "./slotConstructor.js";
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
 export default class Schedule {
