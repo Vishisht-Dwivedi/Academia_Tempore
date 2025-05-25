@@ -1,8 +1,16 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const SlotSchema = new Schema({
-    subjectCode: { type: String, required: true },
-    subjectType: { type: String, enum: ["Theory", "Lab"], required: true },
+    slot: {
+        type: Number,
+        required: true
+    },
+    subject: {
+        type: Schema.Types.ObjectId,
+        ref: "Subject",
+        required: true
+    },
     teacher: {
         type: Schema.Types.ObjectId,
         ref: "Teacher",
@@ -10,15 +18,16 @@ const SlotSchema = new Schema({
     }
 }, { _id: false });
 
-const ScheduleSchema = new Schema({
-    1: { type: SlotSchema, default: null },
-    2: { type: SlotSchema, default: null },
-    3: { type: SlotSchema, default: null },
-    4: { type: SlotSchema, default: null },
-    5: { type: SlotSchema, default: null },
-    6: { type: SlotSchema, default: null },
-    7: { type: SlotSchema, default: null },
-    8: { type: SlotSchema, default: null }
+const DayScheduleSchema = new Schema({
+    day: {
+        type: String,
+        enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+        required: true
+    },
+    slots: {
+        type: [SlotSchema],
+        default: []
+    }
 }, { _id: false });
 
-export default ScheduleSchema;
+export default DayScheduleSchema;

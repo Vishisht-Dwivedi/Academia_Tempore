@@ -1,28 +1,19 @@
+const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
 export default class Schedule {
-    constructor(daySchedule) {
-        const schedule = {
-            1: null,
-            2: null,
-            3: null,
-            4: null,
-            5: null,
-            6: null,
-            7: null,
-            8: null
+    constructor(day, slotsArray = []) {
+        if (!day) throw new Error("Schedule must have a day");
+
+        const normalizedDay = day.trim().toLowerCase();
+        if (!days.includes(normalizedDay)) {
+            throw new Error(`${day} must be within weekdays`);
         }
-        daySchedule.forEach((slot) => {
-            slot.time.forEach((t) => {
-                if (schedule[t]) {
-                    throw new Error("Slot is already assigned");
-                } else {
-                    schedule[t] = {
-                        subjectCode: slot.subjectCode,
-                        subjectType: slot.subjectType,
-                        teacher: slot.teacher
-                    }
-                }
-            })
-        });
-        return schedule;
+
+        if (!Array.isArray(slotsArray)) {
+            throw new Error("slotsArray must be an array");
+        }
+
+        this.day = normalizedDay;
+        this.slots = slotsArray;
     }
 }
