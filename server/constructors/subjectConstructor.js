@@ -1,7 +1,7 @@
 const validTypes = ["theory", "lab"];
 
 export default class Subject {
-    constructor(code, name, type, teachers = []) {
+    constructor(name, code, type, teachers = []) {
         if (!code || !name || !type) {
             throw new Error("Subject must have a code, name and type");
         }

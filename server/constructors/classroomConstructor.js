@@ -1,3 +1,5 @@
+import Schedule from "./scheduleConstructor";
+
 export default class Classrooms {
     constructor(room, daySchedules = []) {
         if (!room) throw new Error("Classroom must have a room identifier");
@@ -6,7 +8,9 @@ export default class Classrooms {
             throw new Error("Schedule must be an array of day schedules");
         }
 
+        const schedule = daySchedules.map((schedule) => new Schedule(schedule.day, schedule.slots));
+
         this.room = room.trim().toUpperCase();
-        this.schedule = daySchedules;
+        this.schedule = schedule;
     }
 }
