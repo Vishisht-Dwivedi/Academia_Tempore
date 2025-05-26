@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import createTeacher from "./services/create/createTeacher.js";
-import createSubject from "./services/create/createSubject.js";
-import createClassroom from "./services/create/createClassroom.js";
-import teachers from "./seeds/teachers.js";
-import subjects from "./seeds/subjects.js";
-import Rooms from "./seeds/classroom_schedule.js";
+import createTeacher from "../services/create/createTeacher.js";
+import createSubject from "../services/create/createSubject.js";
+import createClassroom from "../services/create/createClassroom.js";
+import teachers from "./teachers.js";
+import subjects from "./subjects.js";
+import Rooms from "./classroom_schedule.js";
 try {
     await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
     console.log("Connected to Database");
