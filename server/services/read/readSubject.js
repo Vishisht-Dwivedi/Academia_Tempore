@@ -19,4 +19,9 @@ const getSubjectByCodeAndType = async ({ code, type }) => {
     }
     return subject;
 }
-export { getSubjectByID, getSubjectByCodeAndType }
+
+const getAllSubjects = async () => {
+    const subjects = await SubjectModel.find({}, { name: true, type: true, code: true }).lean();
+    return subjects;
+}
+export { getSubjectByID, getSubjectByCodeAndType, getAllSubjects }

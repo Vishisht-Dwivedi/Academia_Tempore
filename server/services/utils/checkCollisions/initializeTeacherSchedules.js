@@ -1,12 +1,10 @@
 export class Schedule {
     constructor() {
-        return {
-            monday: new Set(),
-            tuesday: new Set(),
-            wednesday: new Set(),
-            thursday: new Set(),
-            friday: new Set()
-        };
+        this.monday = new Set();
+        this.tuesday = new Set();
+        this.wednesday = new Set();
+        this.thursday = new Set();
+        this.friday = new Set();
     }
 }
 

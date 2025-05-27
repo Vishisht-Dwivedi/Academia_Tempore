@@ -20,4 +20,8 @@ const getClassroomByRoom = async (room) => {
     }
     return classroom;
 }
-export { getClassroomByID, getClassroomByRoom }
+const getAllClassroom = async () => {
+    const classrooms = await ClassroomModel.find({}, { room: true }).lean();
+    return classrooms;
+}
+export { getClassroomByID, getClassroomByRoom, getAllClassroom }

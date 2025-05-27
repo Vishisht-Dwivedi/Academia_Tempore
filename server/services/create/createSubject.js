@@ -1,8 +1,8 @@
 import SubjectModel from "../../models/Subjects.js";
-import TeacherModel from "../../models/Teachers.js";
 import Subject from "../../constructors/subjectConstructor.js";
 import addBacklink from "../utils/addBacklink/index.js";
-// expects an object with name, code, type; teachers is optional and will not be strictly enforced
+import codeToID from "../utils/codesToID/index.js";
+// expects an object with name, code, type, teacherCodes
 export default async function createSubject(subject) {
     const { name, code, type, teachers = [] } = subject;
 
@@ -14,14 +14,7 @@ export default async function createSubject(subject) {
     const validatedSubject = new Subject(code, name, type, teachers);
 
     // convert code to IDs
-    const teacherIDs = (
-        await Promise.all(
-            validatedSubject.teachers.map(async (teacherCode) => {
-                const teacherDoc = await TeacherModel.findOne({ code: teacherCode });
-                return teacherDoc ? teacherDoc._id : null;
-            })
-        )
-    ).filter(Boolean); // remove nulls
+    const teacherIDs = await codeToID("Teacher", validatedSubject.teachers); // remove nulls
 
     const subjectToSave = {
         name: validatedSubject.name,

@@ -1,11 +1,12 @@
 import Slot from "./slotConstructor.js";
+import { normalizeString } from "./utils/normalizeString.js";
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
 export default class Schedule {
     constructor(day, slotsArray = []) {
         if (!day) throw new Error("Schedule must have a day");
 
-        const normalizedDay = day.trim().toLowerCase();
+        const normalizedDay = normalizeString(day);
         if (!days.includes(normalizedDay)) {
             throw new Error(`${day} must be within weekdays`);
         }

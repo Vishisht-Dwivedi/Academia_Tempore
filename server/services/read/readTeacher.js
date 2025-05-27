@@ -21,7 +21,7 @@ const getTeacherByCode = async (code) => {
     return teacher;
 }
 const getAllTeachers = async () => {
-    const allTeachers = await TeacherModel.find({}, "name code").lean();
+    const allTeachers = await TeacherModel.find({}, { name: true, code: true }).lean();
     return allTeachers;
 }
 export { getTeacherByID, getTeacherByCode, getAllTeachers }

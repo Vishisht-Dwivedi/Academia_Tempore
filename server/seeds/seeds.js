@@ -13,26 +13,36 @@ try {
     console.error("Error connecting to database:", error);
     process.exit(1);
 }
-for (const teacher of teachers) {
-    try {
-        await createTeacher(teacher);
-    } catch (error) {
-        console.log(error);
+async function seedTeachers() {
+    for (const teacher of teachers) {
+        try {
+            await createTeacher(teacher);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
-
-for (const subject of subjects) {
-    try {
-        await createSubject(subject);
-    } catch (error) {
-        console.log(error);
+async function seedSubjects() {
+    for (const subject of subjects) {
+        try {
+            await createSubject(subject);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
-
-for (const room of Rooms) {
-    try {
-        await createClassroom(room);
-    } catch (error) {
-        console.log(error);
+async function seedClassrooms() {
+    for (const room of Rooms) {
+        try {
+            await createClassroom(room);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
+async function seed() {
+    await seedTeachers();
+    await seedSubjects();
+    await seedClassrooms();
+}
+seed();

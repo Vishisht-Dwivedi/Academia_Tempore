@@ -8,8 +8,8 @@ const subjects = [
     new Subject("SE", "Software Engineering", "Theory", []),
     new Subject("ED", "Engineering Drawing", "Theory", []),
 
-    new Subject("SE", "Software Engineering Lab", "Lab", []),
-    new Subject("COA", "Computer Organization and Architecture Lab", "Lab", []),
-    new Subject("DBMS", "Database Management Systems Lab", "Lab", [])
+    new Subject("SE", "Software Engineering", "Lab", []),
+    new Subject("COA", "Computer Organization and Architecture", "Lab", []),
+    new Subject("DBMS", "Database Management Systems", "Lab", [])
 ];
 export default subjects;
