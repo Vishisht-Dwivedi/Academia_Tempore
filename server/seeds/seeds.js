@@ -7,7 +7,8 @@ import subjects from "./subjects.js";
 import Rooms from "./classroom_schedule.js";
 try {
     await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
-    console.log("Connected to Database");
+    await mongoose.connection.db.dropDatabase();
+    console.log("Connected to Database and cleared database");
 } catch (error) {
     console.error("Error connecting to database:", error);
     process.exit(1);

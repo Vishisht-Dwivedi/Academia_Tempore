@@ -18,8 +18,9 @@ export default async function createClassroom({ room, schedule }) {
         schedule: scheduleToSave
     };
 
-    const savedClassroom = await new ClassroomModel(classroomToSave).save();
+    const savedClassroom = await (await new ClassroomModel(classroomToSave).save())
+        .populate("schedule.slots.teacher", "code");
     await addBacklink("Classroom", savedClassroom);
-    await checkTeacherCollision(savedClassroom.toObject());
+    await checkTeacherCollision(savedClassroom);
     return savedClassroom;
 }
