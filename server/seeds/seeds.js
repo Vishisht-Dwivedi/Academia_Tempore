@@ -14,8 +14,7 @@ try {
 }
 for (const teacher of teachers) {
     try {
-        const savedTeacher = await createTeacher(teacher);
-        console.log(savedTeacher);
+        await createTeacher(teacher);
     } catch (error) {
         console.log(error);
     }
@@ -23,8 +22,7 @@ for (const teacher of teachers) {
 
 for (const subject of subjects) {
     try {
-        const savedSub = await createSubject(subject);
-        console.log(savedSub);
+        await createSubject(subject);
     } catch (error) {
         console.log(error);
     }
@@ -32,8 +30,7 @@ for (const subject of subjects) {
 
 for (const room of Rooms) {
     try {
-        const savedRoom = await createClassroom(room);
-        console.log(savedRoom);
+        await createClassroom(room);
     } catch (error) {
         console.log(error);
     }

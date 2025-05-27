@@ -20,27 +20,5 @@ export default async function createSlot(slotObj) {
         teacher: teacherDoc._id
     }
 
-    // ensure backlink: teacher -> subject
-    const teacherHasSubject = teacherDoc.subjects.some(
-        (sub) => sub.equals(subjectDoc._id) //this because mongo id is weird and subjects store IDs IMPORTANT
-    );
-    if (!teacherHasSubject) {
-        await TeacherModel.updateOne(
-            { _id: teacherDoc._id },
-            { $addToSet: { subjects: subjectDoc._id } }
-        );
-    }
-
-    // ensure backlink: subject -> teacher
-    const subjectHasTeacher = subjectDoc.teachers.some(
-        (tchr) => tchr.equals(teacherDoc._id) //teachers is an array of IDs.. IMPORTANT
-    );
-    if (!subjectHasTeacher) {
-        await SubjectModel.updateOne(
-            { _id: subjectDoc._id },
-            { $addToSet: { teachers: teacherDoc._id } }
-        );
-    }
-
     return slotToSave;
 }

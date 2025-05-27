@@ -20,4 +20,8 @@ const getTeacherByCode = async (code) => {
     }
     return teacher;
 }
-export { getTeacherByID, getTeacherByCode }
+const getAllTeachers = async () => {
+    const allTeachers = await TeacherModel.find({}, "name code").lean();
+    return allTeachers;
+}
+export { getTeacherByID, getTeacherByCode, getAllTeachers }

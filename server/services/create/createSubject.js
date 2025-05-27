@@ -1,7 +1,7 @@
 import SubjectModel from "../../models/Subjects.js";
 import TeacherModel from "../../models/Teachers.js";
 import Subject from "../../constructors/subjectConstructor.js";
-
+import addBacklink from "../utils/addBacklink/index.js";
 // expects an object with name, code, type; teachers is optional and will not be strictly enforced
 export default async function createSubject(subject) {
     const { name, code, type, teachers = [] } = subject;
@@ -31,12 +31,7 @@ export default async function createSubject(subject) {
     };
 
     const savedSubject = await new SubjectModel(subjectToSave).save();
-
-    // backlink to teacher
-    await TeacherModel.updateMany(
-        { _id: { $in: teacherIDs } },
-        { $addToSet: { subjects: savedSubject._id } }
-    );
+    await addBacklink("Subject", savedSubject);
 
     return savedSubject;
 }

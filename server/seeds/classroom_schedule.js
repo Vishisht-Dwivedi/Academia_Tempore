@@ -89,10 +89,4 @@ const Labs = [
     ]),
 ];
 const Rooms = Theory.concat(Labs);
-Rooms.forEach((room) => {
-    const schedule = room.schedule;
-    schedule.forEach((slot) => {
-        console.log(slot.slots);
-    })
-})
 export default Rooms;

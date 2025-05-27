@@ -1,4 +1,4 @@
-import { getTeacherByID, getTeacherByCode } from "./services/read/readTeacher.js";
+import { getTeacherByID, getTeacherByCode, getAllTeachers } from "./services/read/readTeacher.js";
 import { getSubjectByID, getSubjectByCodeAndType } from "./services/read/readSubject.js";
 import { getClassroomByID, getClassroomByRoom } from "./services/read/readClassroom.js";
 import mongoose from "mongoose";
@@ -19,10 +19,12 @@ try {
         const classroomDoc = await getClassroomByRoom(room.room);
         for (const day of classroomDoc.schedule) {
             for (const slot of day.slots) {
-                console.log(slot);
+                // console.log(slot);
             }
         }
     }
+    const allTeachers = await getAllTeachers();
+    console.log(allTeachers);
 } catch (error) {
     console.log(error);
 }

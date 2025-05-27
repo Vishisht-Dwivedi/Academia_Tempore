@@ -2,7 +2,7 @@ import Teacher from "../../constructors/teacherConstructor.js";
 import TeacherModel from "../../models/Teachers.js";
 import SubjectModel from "../../models/Subjects.js";
 import ClassroomModel from "../../models/Classrooms.js";
-
+import addBacklink from "../utils/addBacklink/index.js";
 export default async function createTeacher(teacher) {
     const { name, code, subjects = [], classes = [] } = { ...teacher };
 
@@ -43,18 +43,7 @@ export default async function createTeacher(teacher) {
     };
 
     const savedTeacher = await new TeacherModel(teacherToSave).save();
-
-    // Update back references in Subjects
-    await SubjectModel.updateMany(
-        { _id: { $in: subjectIds } },
-        { $addToSet: { teachers: savedTeacher._id } }
-    );
-
-    // Update back references in Classrooms
-    await ClassroomModel.updateMany(
-        { _id: { $in: classIds } },
-        { $addToSet: { teachers: savedTeacher._id } }
-    );
+    await addBacklink("Teacher", savedTeacher);
 
     return savedTeacher;
 }
