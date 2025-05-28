@@ -33,11 +33,8 @@ async function seedSubjects() {
 }
 async function seedClassrooms() {
     for (const room of Rooms) {
-        try {
-            await createClassroom(room);
-        } catch (error) {
-            console.log(error);
-        }
+        const response = await createClassroom(room);
+        console.log(response);
     }
 }
 async function seed() {
