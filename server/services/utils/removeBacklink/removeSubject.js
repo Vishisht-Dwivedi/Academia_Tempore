@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import SubjectModel from "../../../models/Subjects.js";
 import ClassroomModel from "../../../models/Classrooms.js";
 import TeacherModel from "../../../models/Teachers.js";
@@ -22,6 +23,8 @@ import { normalizeString } from "../../../constructors/utils/normalizeString.js"
  */
 async function removeAll(subject) {
     const { _id: subjectId, teachers = [] } = subject;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         // go through all classroom of teachers and remove all slots with that subject
         for (const teacher of teachers) {
@@ -30,19 +33,24 @@ async function removeAll(subject) {
                 { _id: { $in: teacherDoc.classes } },
                 {
                     $pull: { "schedule.$[].slots": { subject: subjectId } }
-                }
+                }, { session }
             )
             // remove the subject from that teacher's document
             await TeacherModel.updateOne(
                 { _id: teacher },
-                { $pull: { subjects: subjectId } }
+                { $pull: { subjects: subjectId } },
+                { session }
             )
         }
-        await SubjectModel.updateOne({ _id: subjectId }, { teachers: [] });
+        await SubjectModel.updateOne({ _id: subjectId }, { teachers: [] }, { session });
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing subject references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 /**
@@ -58,40 +66,55 @@ async function removeAll(subject) {
  */
 async function removeTeacher(subject, teacherID) {
     const { _id: subjectId } = subject;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         const teacherDoc = await TeacherModel.findOne({ _id: teacherID }, { classes: true });
         await ClassroomModel.updateMany(
             { _id: { $in: teacherDoc.classes } },
             {
                 $pull: { "schedule.$[].slots": { subject: subjectId } }
-            }
+            }, { session }
         )
         await TeacherModel.updateOne(
             { _id: teacherID },
-            { $pull: { subjects: subjectId } }
+            { $pull: { subjects: subjectId } },
+            { session }
         );
         await SubjectModel.updateOne(
             { _id: subjectId },
-            { $pull: { teachers: teacherID } }
+            { $pull: { teachers: teacherID } },
+            { session }
         )
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing subject references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 
 async function removeClassroom(subject, classID) {
     const { _id: subjectId } = subject;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         await ClassroomModel.updateOne(
             { _id: classID },
-            { $pull: { "schedule.$[].slots": { subject: subjectId } } }
+            { $pull: { "schedule.$[].slots": { subject: subjectId } } },
+            { session }
         );
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing subject references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 /**

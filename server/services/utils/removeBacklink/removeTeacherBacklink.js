@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import SubjectModel from "../../../models/Subjects.js";
 import ClassroomModel from "../../../models/Classrooms.js";
 import TeacherModel from "../../../models/Teachers.js";
@@ -6,57 +7,53 @@ import { normalizeString } from "../../../constructors/utils/normalizeString.js"
 /**
  * Removes all references of a teacher from subjects and classrooms,
  * and clears the teacher's subject and class lists.
- *
- * @async
- * @function removeAll
- * @param {Object} teacher - The teacher document.
- * @param {string} teacher._id - The ID of the teacher.
- * @param {string[]} [teacher.classes=[]] - Array of classroom IDs assigned to the teacher.
- * @param {string[]} [teacher.subjects=[]] - Array of subject IDs assigned to the teacher.
- * @returns {Promise<Object>} - An object with `success: true` if operation succeeded, else `success: false` and the error.
  */
 async function removeAll(teacher) {
     const { _id: teacherId, classes = [], subjects = [] } = teacher;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         await SubjectModel.updateMany(
             { _id: { $in: subjects } },
-            { $pull: { teachers: teacherId } }
+            { $pull: { teachers: teacherId } },
+            { session }
         );
 
         await ClassroomModel.updateMany(
             { _id: { $in: classes } },
-            { $pull: { "schedule.$[].slots": { teacher: teacherId } } }
+            { $pull: { "schedule.$[].slots": { teacher: teacherId } } },
+            { session }
         );
 
         await TeacherModel.updateOne(
             { _id: teacherId },
-            { $set: { classes: [], subjects: [] } }
+            { $set: { classes: [], subjects: [] } },
+            { session }
         );
 
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing teacher references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 
 /**
  * Removes a teacher's reference from a specific subject and all related classroom schedules.
- *
- * @async
- * @function removeSubject
- * @param {Object} teacher - The teacher document.
- * @param {string} teacher._id - The ID of the teacher.
- * @param {string[]} teacher.classes - Array of classroom IDs assigned to the teacher.
- * @param {string} subjectID - The ID of the subject to remove.
- * @returns {Promise<Object>} - An object with `success: true` if operation succeeded, else `success: false` and the error.
  */
 async function removeSubject(teacher, subjectID) {
     const { _id: teacherId, classes = [] } = teacher;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         await SubjectModel.updateOne(
             { _id: subjectID },
-            { $pull: { teachers: teacherId } }
+            { $pull: { teachers: teacherId } },
+            { session }
         );
 
         await ClassroomModel.updateMany(
@@ -68,33 +65,34 @@ async function removeSubject(teacher, subjectID) {
                         subject: subjectID
                     }
                 }
-            }
+            },
+            { session }
         );
 
         await TeacherModel.updateOne(
             { _id: teacherId },
-            { $pull: { subjects: subjectID } }
+            { $pull: { subjects: subjectID } },
+            { session }
         );
 
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing teacher references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 
 /**
  * Removes a teacher's reference from a specific classroom's schedule.
- *
- * @async
- * @function removeClassroom
- * @param {Object} teacher - The teacher document.
- * @param {string} teacher._id - The ID of the teacher.
- * @param {string} classID - The ID of the classroom to remove.
- * @returns {Promise<Object>} - An object with `success: true` if operation succeeded, else `success: false` and the error.
  */
 async function removeClassroom(teacher, classID) {
     const { _id: teacherId } = teacher;
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
         await ClassroomModel.updateOne(
             { _id: classID },
@@ -104,31 +102,29 @@ async function removeClassroom(teacher, classID) {
                         teacher: teacherId
                     }
                 }
-            }
+            },
+            { session }
         );
 
         await TeacherModel.updateOne(
             { _id: teacherId },
-            { $pull: { classes: classID } }
+            { $pull: { classes: classID } },
+            { session }
         );
 
+        await session.commitTransaction();
         return { success: true };
     } catch (error) {
+        await session.abortTransaction();
         console.error("Error removing teacher references:", error);
         return { success: false, error };
+    } finally {
+        session.endSession();
     }
 }
 
 /**
  * Removes a teacher's reference from the system based on the provided object type and target ID.
- *
- * @async
- * @function removeTeacherBacklinks
- * @param {Object} teacher - The teacher document to clean up references for.
- * @param {Object|null} [objectToRemove=null] - Optional object containing the type and ID of the reference to remove.
- * @param {string} objectToRemove.type - The type of object ("subject" or "classroom").
- * @param {string} objectToRemove.targetID - The ID of the specific subject or classroom.
- * @returns {Promise<Object>} - An object with `success: true` if the operation succeeded, else `success: false` and the error.
  */
 export default async function removeTeacherBacklinks(teacher, objectToRemove = null) {
     try {
