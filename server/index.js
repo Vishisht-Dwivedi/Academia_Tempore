@@ -1,11 +1,14 @@
+import dotenv from "dotenv";
 import express from "express";
 import teachersApi from "./routes/teachers/teachersApi.js";
 import classroomRoutes from "./routes/classrooms/classroomRoutes.js"
 import cors from "cors";
 import mongoose from "mongoose";
 
+dotenv.config();
+
 try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to Database");
 } catch (error) {
     console.error("Error connecting to database:", error);

@@ -15,8 +15,8 @@ const backlinkRegister = {
  * @param {Object|null} objectIDToRemove - Optional descriptor (e.g., { type: "classroom", targetID: "xyz" }) or null for full cleanup.
  * @returns {Promise<Object>} - Result object indicating success or failure.
  */
-export default async function removeBacklink(option, object, objectIDToRemove) {
+export default async function removeBacklink(option, object, objectToRemove) {
     const handler = backlinkRegister[option];
-    if (handler) return await handler(object, objectIDToRemove);
+    if (handler) return await handler(object, objectToRemove);
     return { success: false, error: `No backlink handler found for ${option}` };
 }

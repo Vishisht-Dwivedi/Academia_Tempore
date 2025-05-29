@@ -1,10 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { getTeacherByID, getTeacherByCode, getAllTeachers } from "./services/read/readTeacher.js";
 import { getSubjectByID, getSubjectByCodeAndType, getAllSubjects } from "./services/read/readSubject.js";
 import { getClassroomByID, getClassroomByRoom, getAllClassroom } from "./services/read/readClassroom.js";
 import mongoose from "mongoose";
 import './registerModels.js'
 try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/timetable");
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to Database");
 } catch (error) {
     console.error("Error connecting to database:", error);
