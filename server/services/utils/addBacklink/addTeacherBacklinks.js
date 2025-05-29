@@ -1,17 +1,19 @@
+// addTeacherBacklinks.js
+
 import SubjectModel from "../../../models/Subjects.js";
 import ClassroomModel from "../../../models/Classrooms.js";
 import mongoose from "mongoose";
 
 /**
- * Adds backlink references to subjects and classrooms from a teacher.
+ * Adds backlink references to subjects and classrooms from a teacher document.
  *
  * @async
  * @function addTeacherBacklinks
  * @param {Object} teacher - The teacher document.
- * @param {string} teacher._id - The ID of the teacher.
- * @param {string[]} teacher.subjects - List of subject IDs.
- * @param {string[]} teacher.classes - List of classroom IDs.
- * @returns {Promise<Object>} Result object with success status.
+ * @param {import('mongoose').Types.ObjectId|string} teacher._id - Teacher ID.
+ * @param {Array<import('mongoose').Types.ObjectId|string>} teacher.subjects - Array of subject IDs.
+ * @param {Array<import('mongoose').Types.ObjectId|string>} teacher.classes - Array of classroom IDs.
+ * @returns {Promise<Object>} Result object with success status and possible error.
  */
 export default async function addTeacherBacklinks(teacher) {
     const session = await mongoose.startSession();

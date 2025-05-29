@@ -1,3 +1,5 @@
+// addClassroomBacklinks.js
+
 import TeacherModel from "../../../models/Teachers.js";
 import SubjectModel from "../../../models/Subjects.js";
 import mongoose from "mongoose";
@@ -8,9 +10,9 @@ import mongoose from "mongoose";
  * @async
  * @function addClassroomBacklinks
  * @param {Object} classroom - The classroom document.
- * @param {string} classroom._id - The ID of the classroom.
- * @param {Array} classroom.schedule - Array of day-wise schedules.
- * @returns {Promise<Object>} Result object with success status.
+ * @param {import('mongoose').Types.ObjectId|string} classroom._id - Classroom ID.
+ * @param {Array<{slots: Array<{teacher: import('mongoose').Types.ObjectId|string, subject: import('mongoose').Types.ObjectId|string}>}>} classroom.schedule - Schedule array with day-wise slots.
+ * @returns {Promise<Object>} Result object with success status and possible error.
  */
 export default async function addClassroomBacklinks(classroom) {
     const session = await mongoose.startSession();
