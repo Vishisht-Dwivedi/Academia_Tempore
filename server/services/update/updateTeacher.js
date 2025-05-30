@@ -25,7 +25,7 @@ import addBacklink from "../utils/addBacklink/index.js";
 export default async function updateTeacher(teacherObj) {
     const { _id, name, code, subjects = [], classes = [] } = teacherObj;
     const validatedTeacher = new Teacher(name, code, classes, subjects);
-    const convertedClassCodes = await codeToID("Classroom", validatedTeacher.classes.map((c) => c.room));
+    const convertedClassCodes = await codeToID("Classroom", validatedTeacher.classes?.map((c) => c.room));
     const convertedSubjectCodes = await codeToID("Subject", subjects);
     const teacherToSave = {
         name: validatedTeacher.name,
