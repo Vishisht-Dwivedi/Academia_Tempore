@@ -15,6 +15,9 @@ import createClassroom from "../services/create/createClassroom.js";
 import teachers from "./teachers.js";
 import subjects from "./subjects.js";
 import Rooms from "./classroom_schedule.js";
+import { getAllTeachers } from "../services/read/readTeacher.js";
+import { getAllSubjects } from "../services/read/readSubject.js";
+import { getAllClassroom } from "../services/read/readClassroom.js";
 
 async function connectAndClearDB() {
     try {
@@ -54,16 +57,26 @@ async function seedClassrooms() {
         try {
             const response = await createClassroom(room);
             if (response.status === "OK") {
-                console.log(`Created classroom: ${response.classroom.room}`);
+                console.log(`Created classroom: ${response.classroom}`);
             } else {
                 console.warn(`Classroom collision for room ${room.room}:`, response.message);
             }
+            const allRooms = await getAllClassroom();
+            console.log(allRooms);
         } catch (error) {
             console.error(`Error creating classroom (${room.room}):`, error.message);
         }
     }
 }
 
+async function verify() {
+    const allTeachers = await getAllTeachers();
+    const allSubjects = await getAllSubjects();
+    const allClassrooms = await getAllClassroom();
+    console.log(allTeachers);
+    console.log(allSubjects);
+    console.log(allClassrooms);
+}
 async function seed() {
     await connectAndClearDB();
     await seedTeachers();

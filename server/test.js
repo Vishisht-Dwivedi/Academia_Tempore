@@ -62,3 +62,9 @@ try {
 // } catch (error) {
 //     console.log(error);
 // }
+try {
+    const classrooms = await getAllClassroom();
+    console.log(classrooms);
+} catch (error) {
+    console.log(error);
+}

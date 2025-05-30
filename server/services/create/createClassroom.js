@@ -31,12 +31,8 @@ export default async function createClassroom({ room, schedule }) {
         room: classroom.room,
         schedule: scheduleToSave
     };
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
     try {
-        const savedClassroom = await new ClassroomModel(classroomToSave).save({ session });
+        const savedClassroom = await new ClassroomModel(classroomToSave).save();
         await savedClassroom.populate("schedule.slots.teacher", "code");
 
         await addBacklink("Classroom", savedClassroom);
@@ -44,8 +40,7 @@ export default async function createClassroom({ room, schedule }) {
         const collisionResult = await checkClassroomCollision(savedClassroom);
 
         if (collisionResult.status) {
-            await session.commitTransaction();
-            session.endSession();
+            console.log("saved here");
             return {
                 status: "OK",
                 classroom: savedClassroom
@@ -58,10 +53,8 @@ export default async function createClassroom({ room, schedule }) {
                 const state = await removeBacklink("Teacher", { _id: teacherId }, { type: "classroom", targetID: savedClassroom._id });
                 if (!state.success) console.log(state.error);
             }
-
-            await ClassroomModel.findByIdAndDelete(savedClassroom._id, { session });
-            await session.abortTransaction();
-            session.endSession();
+            console.log("Deleted here");
+            await ClassroomModel.findByIdAndDelete(savedClassroom._id);
 
             return {
                 status: "Collision",
@@ -70,8 +63,6 @@ export default async function createClassroom({ room, schedule }) {
             };
         }
     } catch (error) {
-        await session.abortTransaction();
-        session.endSession();
         throw error;
     }
 }
