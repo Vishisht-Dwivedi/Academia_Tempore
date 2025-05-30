@@ -20,7 +20,8 @@ import SubjectModel from "../../../models/Subjects.js";
 export default async function subjectCodesToID(subjectArr) {
     const subjectIds = await Promise.all(
         subjectArr.map(async (subject) => {
-            const subjectDoc = await SubjectModel.findOne(subject);
+            const { type, code } = subject;
+            const subjectDoc = await SubjectModel.findOne({ code, type });
             if (!subjectDoc) {
                 throw new Error(`Subject with code '${subject.code}' and type '${subject.type}' not found`);
             }
