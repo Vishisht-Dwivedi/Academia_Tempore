@@ -1,9 +1,6 @@
 import ClassroomModel from "../../models/Classrooms.js";
 const getClassroomByID = async (_id) => {
-    const classroom = await ClassroomModel.findById(_id)
-        .populate("schedule.slots.teacher", ["code", "name"])
-        .populate("schedule.slots.subject", ["code", "type", "name"])
-        .lean();
+    const classroom = await ClassroomModel.findById(_id).lean();
     if (!classroom) {
         throw new Error(`No classroom found with id: ${_id}`);
     }
@@ -11,17 +8,14 @@ const getClassroomByID = async (_id) => {
 }
 const getClassroomByRoom = async (room) => {
     const validatedRoom = room.trim().toUpperCase();
-    const classroom = await ClassroomModel.findOne({ room: validatedRoom })
-        .populate("schedule.slots.teacher", ["code", "name"])
-        .populate("schedule.slots.subject", ["code", "type", "name"])
-        .lean();
+    const classroom = await ClassroomModel.findOne({ room: validatedRoom }).lean();
     if (!classroom) {
         throw new Error(`No classroom found with id: ${_id}`);
     }
     return classroom;
 }
 const getAllClassroom = async () => {
-    const classrooms = await ClassroomModel.find({}, { room: true }).lean();
+    const classrooms = await ClassroomModel.find({}).lean();
     return classrooms;
 }
 export { getClassroomByID, getClassroomByRoom, getAllClassroom }

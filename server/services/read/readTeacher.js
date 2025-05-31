@@ -1,9 +1,6 @@
 import TeacherModel from "../../models/Teachers.js";
 const getTeacherByID = async (_id) => {
-    const teacher = await TeacherModel.findById(_id)
-        .populate("subjects", ["code", "type", "name"])
-        .populate("classes", "room")
-        .lean();
+    const teacher = await TeacherModel.findById(_id).lean();
     if (!teacher) {
         throw new Error(`No Teacher found with id: ${_id}`);
     }
@@ -11,17 +8,14 @@ const getTeacherByID = async (_id) => {
 }
 const getTeacherByCode = async (code) => {
     const validatedCode = code.trim().toLowerCase();
-    const teacher = await TeacherModel.findOne({ code: validatedCode })
-        .populate("subjects", ["code", "type", "name"])
-        .populate("classes", "room")
-        .lean();
+    const teacher = await TeacherModel.findOne({ code: validatedCode }).lean();
     if (!teacher) {
         throw new Error(`No Teacher found with code: ${code}`);
     }
     return teacher;
 }
 const getAllTeachers = async () => {
-    const allTeachers = await TeacherModel.find({}, { name: true, code: true }).lean();
+    const allTeachers = await TeacherModel.find({}).lean();
     return allTeachers;
 }
 export { getTeacherByID, getTeacherByCode, getAllTeachers }
