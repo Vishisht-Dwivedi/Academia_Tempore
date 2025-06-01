@@ -35,7 +35,8 @@ export default async function getTeacherSchedule(teacherID) {
                         teacherSchedule[day.day].set(slot.slot, {
                             subject: subjectDoc.name,
                             type: subjectDoc.type,
-                            room: classroomDoc.room
+                            room: classroomDoc.room,
+                            teacher: teacherDoc.name
                         })
                     }
                 }
