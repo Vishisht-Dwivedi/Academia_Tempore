@@ -133,7 +133,6 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 ![GitHub Repo stars](https://img.shields.io/github/stars/Vishisht-Dwivedi/Academia_Tempore?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/Vishisht-Dwivedi/Academia_Tempore?style=social)
 ![GitHub clones](https://img.shields.io/badge/clones-89-blueviolet?logo=github)
-![Built with](https://img.shields.io/badge/built%20with-GraphQL%20%7C%20Mongoose%20%7C%20Node.js-brightgreen)
 
 > 🎉 Cloned by 59 developers in just 2 weeks — thank you for the support!
 > ❤️ Cloning this repo? Consider giving it a ⭐ — it means a lot!
