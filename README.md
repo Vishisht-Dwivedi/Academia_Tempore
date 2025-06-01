@@ -116,7 +116,7 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 
 * **Node.js**, **Express.js**
 * **MongoDB Atlas** with **Mongoose ODM** 
-* **GraphQL** (planned integration)
+* **GraphQL** (Apollo Server)
 * **Modular utility-driven design**
 
 ---
