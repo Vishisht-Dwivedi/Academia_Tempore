@@ -65,25 +65,49 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 ## 🗃️ System Architecture
 
 ```
-📦 Academia Tempore/
-├── constructors/
-|   ├── utils/
-|   |   ├── capitalizeString.js
-|   |   ├── normalizeString.js
-|   ├── classroomConstructor.js
-|   ├── scheduleConstructor.js
-|   ├── slotConstructor.js
-|   ├── subjectConstructor.js
-|   ├── teacherConstructor.js
-├── models/
-│   ├── Classroom.js
-│   ├── Teacher.js
-│   ├── Subject.js
-│   └── Schedule.js
-├── graphql/
-│   └── schema/
-├── index.js
-└── README.md
+📦 AcademiaTempore/
+├── client/                        # (To be implemented – frontend interface)
+├── server/
+│   ├── constructors/             # Validation & transformation logic
+│   │   ├── classroomConstructor.js
+│   │   ├── scheduleConstructor.js
+│   │   ├── slotConstructor.js
+│   │   ├── subjectConstructor.js
+│   │   ├── teacherConstructor.js
+│   │   └── utils/
+│   │       ├── capitalizeString.js
+│   │       └── normalizeString.js
+│
+│   ├── graphql/                  # GraphQL API logic
+│   │   ├── types/
+│   │   │   ├── Classroom.js
+│   │   │   ├── Schedule.js
+│   │   │   ├── Subject.js
+│   │   │   ├── Teacher.js
+│   │   │   └── schema.js
+│
+│   ├── logic/                    # Business logic & computed queries
+│   │   ├── getClassroomSchedule.js
+│   │   └── getTeacherSchedule.js
+│
+│   ├── models/                   # Mongoose schemas
+│   │   ├── Classroom.js
+│   │   ├── Teacher.js
+│   │   ├── Subject.js
+│   │   └── Schedule.js
+│
+│   ├── services/                 # CRUD operations and utility layers
+│   │   ├── create/
+│   │   ├── delete/
+│   │   ├── read/
+│   │   ├── update/
+│   │   └── utils/
+│
+│   ├── seeds/                    # Data seeding 
+│   ├── node_modules/
+│   └── index.js                  # Entry point
+├── README.md
+
 ```
 
 ---
