@@ -65,19 +65,21 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 ## 🗃️ System Architecture
 
 ```
-📦 OrdoTemporum/
+📦 Academia Tempore/
+├── constructors/
+|   ├── utils/
+|   |   ├── capitalizeString.js
+|   |   ├── normalizeString.js
+|   ├── classroomConstructor.js
+|   ├── scheduleConstructor.js
+|   ├── slotConstructor.js
+|   ├── subjectConstructor.js
+|   ├── teacherConstructor.js
 ├── models/
 │   ├── Classroom.js
 │   ├── Teacher.js
 │   ├── Subject.js
 │   └── Schedule.js
-├── utils/
-│   ├── backlinkHandlers.js
-│   ├── collisionCheck.js
-│   └── uplinkManager.js
-├── tests/
-│   └── constructors/
-├── routes/
 ├── graphql/
 │   └── schema/
 ├── index.js
