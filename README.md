@@ -136,5 +136,3 @@ MIT License. Free to use, fork, and extend under scholarly credit.
 
 ---
 
-Would you like this README exported as a `.md` file or further tailored to your GitHub repository and real filenames?
-
