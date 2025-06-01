@@ -6,6 +6,7 @@ import { getClassroomByID, getClassroomByRoom, getAllClassroom } from "./service
 import mongoose from "mongoose";
 import './registerModels.js'
 import updateTeacher from "./services/update/updateTeacher.js";
+import getTeacherSchedule from "./logic/getTeacherSchedule.js";
 try {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to Database");
@@ -63,8 +64,11 @@ try {
 //     console.log(error);
 // }
 try {
-    const classrooms = await getAllClassroom();
-    console.log(classrooms);
+    const rk = await getTeacherByCode("rk");
+    const schedule = await getTeacherSchedule(rk._id);
+    console.log(schedule);
 } catch (error) {
     console.log(error);
+} finally {
+    process.exit(1);
 }

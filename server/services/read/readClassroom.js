@@ -18,4 +18,5 @@ const getAllClassroom = async () => {
     const classrooms = await ClassroomModel.find({}).lean();
     return classrooms;
 }
+
 export { getClassroomByID, getClassroomByRoom, getAllClassroom }
