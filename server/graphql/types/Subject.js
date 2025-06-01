@@ -8,7 +8,7 @@ export const SubjectType = new GraphQLObjectType({
         code: { type: GraphQLString },
         type: { type: GraphQLString },
         teachers: {
-            type: GraphQLList(TeacherType),
+            type: new GraphQLList(TeacherType),
             resolve: async (parent) => {
                 if (!parent.teachers || !parent.teachers.length === 0) return [];
                 try {

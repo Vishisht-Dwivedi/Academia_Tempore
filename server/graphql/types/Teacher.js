@@ -4,13 +4,14 @@ import { getClassroomByID } from "../../services/read/readClassroom.js";
 import { ScheduleType } from "./Schedule.js";
 import { SubjectType } from "./Subject.js";
 import getTeacherSchedule from "../../logic/getTeacherSchedule.js";
+import { ClassroomType } from "./Classroom.js";
 export const TeacherType = new GraphQLObjectType({
     name: "Teacher",
     fields: () => ({
         name: { type: GraphQLString },
         code: { type: GraphQLString },
         subjects: {
-            type: GraphQLList(SubjectType),
+            type: new GraphQLList(SubjectType),
             resolve: async (parent) => {
                 if (!parent.subjects || parent.subjects.length === 0) return [];
                 try {
@@ -28,7 +29,7 @@ export const TeacherType = new GraphQLObjectType({
             }
         },
         classes: {
-            type: GraphQLList(ClassroomType),
+            type: new GraphQLList(ClassroomType),
             resolve: async (parent) => {
                 if (!parent.classes || parent.classes.length === 0) return [];
                 try {

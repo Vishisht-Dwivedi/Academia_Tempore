@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import "./registerModels.js";
-
+import schema from "./graphql/schema.js";
 dotenv.config();
 
 try {
@@ -16,38 +16,7 @@ try {
     process.exit(1);
 }
 
-// TypeDefs and resolvers
-const typeDefs = `#graphql
-    type Teacher {
-        name: String
-        code: String
-        subjects: [String]
-        classes: [String]
-        schedule: [String]
-    }
-
-    type Query {
-        getTeachers: [Teacher]
-    }
-`;
-
-const resolvers = {
-    Query: {
-        getTeachers: () => {
-            return [
-                {
-                    name: "John",
-                    code: "T01",
-                    subjects: ["Math"],
-                    classes: ["10A"],
-                    schedule: ["Mon 9AM"],
-                },
-            ];
-        },
-    },
-};
-
-const apolloServer = new ApolloServer({ typeDefs, resolvers });
+const apolloServer = new ApolloServer({ schema });
 await apolloServer.start();
 
 const app = express();

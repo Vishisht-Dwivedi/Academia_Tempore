@@ -13,10 +13,10 @@ const DaySlotType = new GraphQLObjectType({
 export const ScheduleType = new GraphQLObjectType({
     name: "Schedule",
     fields: () => ({
-        monday: { type: GraphQLList(DaySlotType) },
-        tuesday: { type: GraphQLList(DaySlotType) },
-        wednesday: { type: GraphQLList(DaySlotType) },
-        thursday: { type: GraphQLList(DaySlotType) },
-        friday: { type: GraphQLList(DaySlotType) }
+        monday: { type: new GraphQLList(DaySlotType) },
+        tuesday: { type: new GraphQLList(DaySlotType) },
+        wednesday: { type: new GraphQLList(DaySlotType) },
+        thursday: { type: new GraphQLList(DaySlotType) },
+        friday: { type: new GraphQLList(DaySlotType) }
     })
 })
