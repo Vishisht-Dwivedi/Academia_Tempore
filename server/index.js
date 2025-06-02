@@ -20,9 +20,9 @@ const apolloServer = new ApolloServer({ schema });
 await apolloServer.start();
 
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
