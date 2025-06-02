@@ -132,10 +132,11 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/Vishisht-Dwivedi/Academia_Tempore?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/Vishisht-Dwivedi/Academia_Tempore?style=social)
-![GitHub clones](https://img.shields.io/badge/clones-89-blueviolet?logo=github)
-![Built with](https://img.shields.io/badge/built%20with-GraphQL%20%7C%20Mongoose%20%7C%20Node.js-brightgreen)
 
-> 🎉 Cloned by 59 developers in just 2 weeks — thank you for the support!
+> Over 100 developers have cloned this project—that’s unreal.
+Whether you’re exploring, learning, or building something on top of it—thank you.
+Feel free to open issues, ask questions, or just say hi. I’d love to hear how you’re using it. 🙌
+> The project is under development and the client side is supposed to be rewritten, I'll work on the constraint optimization engine once the basic dashboard is built and implemented.
 > ❤️ Cloning this repo? Consider giving it a ⭐ — it means a lot!
 
 ## 🧾 License
