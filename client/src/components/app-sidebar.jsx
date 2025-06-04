@@ -29,19 +29,19 @@ const data = {
       items: [
         {
           title: "Add",
-          url: "#"
+          url: "/teachers/add"
         },
         {
           title: "View All",
-          url: "#"
+          url: "/teachers/all"
         },
         {
           title: "View Schedule",
-          url: "#",
+          url: "/teachers/schedule",
         },
         {
           title: "Update Schedule",
-          url: "#",
+          url: "/teachers/update",
         },
       ],
     },
@@ -74,6 +74,10 @@ const data = {
         {
           title: "Add",
           url: "#",
+        },
+        {
+          title: "View All",
+          url: "#"
         },
         {
           title: "View Associated Teachers",
