@@ -28,8 +28,8 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Add/Delete",
-          url: "/teachers/add"
+          title: "Manage",
+          url: "/dashboard/teachers"
         },
         {
           title: "View Schedule",
