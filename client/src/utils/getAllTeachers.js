@@ -19,7 +19,6 @@ export const fetchAllTeachers = async () => {
         });
 
         result = await response.json();
-        console.log(result);
         if (result.errors) {
             console.error("GraphQL Errors:", result.errors);
             throw new Error("Failed to fetch teachers");
