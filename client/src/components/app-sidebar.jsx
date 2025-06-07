@@ -33,11 +33,11 @@ const data = {
         },
         {
           title: "View Schedule",
-          url: "/teachers/schedule",
+          url: "/dashboard/teachers/schedule",
         },
         {
           title: "Update Schedule",
-          url: "/teachers/update",
+          url: "/dashboard/teachers/update",
         },
       ],
     },

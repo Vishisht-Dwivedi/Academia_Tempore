@@ -21,7 +21,7 @@ export default function AllTeachersCard({ elementArray, state }) {
         }
     }
     const filteredArray = inputTeacher ?
-        elementArray.filter(element => element.toLowerCase().includes(inputTeacher.toLowerCase()))
+        elementArray.filter(element => element.name.toLowerCase().includes(inputTeacher.toLowerCase()))
         : elementArray;
 
     return (

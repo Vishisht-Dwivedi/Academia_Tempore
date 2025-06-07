@@ -1,4 +1,6 @@
+'use client'
 import { AppSidebar } from "@/components/app-sidebar"
+import Link from "next/link"
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -13,8 +15,12 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
-
+import { usePathname } from "next/navigation"
 export default function Page({ children }) {
+
+    const pathname = usePathname();
+    const pathSegments = pathname.split('/').filter(Boolean);
+
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -24,15 +30,27 @@ export default function Page({ children }) {
                     <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
                     <Breadcrumb>
                         <BreadcrumbList>
-                            <BreadcrumbItem className="hidden md:block">
-                                <BreadcrumbLink href="#">
-                                    Hi
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator className="hidden md:block" />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Hi 2</BreadcrumbPage>
-                            </BreadcrumbItem>
+                            {pathSegments.map((segment, index) => {
+                                const href = '/' + pathSegments.slice(0, index + 1).join('/');
+                                const isLast = index === pathSegments.length - 1;
+
+                                return (
+                                    <div className="flex items-center gap-1" key={href}>
+                                        <BreadcrumbItem>
+                                            {isLast ? (
+                                                <BreadcrumbPage className="capitalize">{decodeURIComponent(segment)}</BreadcrumbPage>
+                                            ) : (
+                                                <BreadcrumbLink asChild>
+                                                    <Link href={href} className="capitalize">
+                                                        {decodeURIComponent(segment)}
+                                                    </Link>
+                                                </BreadcrumbLink>
+                                            )}
+                                        </BreadcrumbItem>
+                                        {!isLast && <BreadcrumbSeparator />}
+                                    </div>
+                                );
+                            })}
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>

@@ -9,10 +9,7 @@ export default function Page() {
     useEffect(() => {
         fetchAllTeachers()
             .then(res => {
-                const nameArr = res.map((element) => {
-                    return element?.name;
-                })
-                setAllTeachers(nameArr);
+                setAllTeachers(res);
             })
             .catch(err => console.log(err))
             .finally(() => {

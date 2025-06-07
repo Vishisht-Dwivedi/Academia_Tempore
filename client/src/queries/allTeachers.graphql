@@ -1,0 +1,6 @@
+query GetAllTeachers{
+    teachers {
+        code
+        name
+    }
+}
