@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { getTeacherSchedule } from "@/utils/getTeacherSchedule";
 import { useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import PlotSchedule from "@/components/PlotSchedule";
+import PlotSchedule from "@/components/schedule/PlotSchedule";
 export default function TeacherSchedule() {
     const [schedule, setSchedule] = useState(null);
     const [scheduleLoading, setScheduleLoading] = useState(true);
@@ -23,9 +23,10 @@ export default function TeacherSchedule() {
         <>
             {scheduleLoading ? <Spinner /> : <>
                 <h1 className="scroll-m-20 text-center text-4xl font-bold tracking-wider text-balance text-indigo-600">
-                    {schedule.name}
+                    {schedule?.name}
                 </h1>
-                <PlotSchedule schedule={schedule.schedule} />
+                {schedule ? <PlotSchedule schedule={schedule.schedule} /> : <div>No record Found</div>}
+
             </>}
         </>
     );

@@ -21,7 +21,6 @@ const RootQuery = new GraphQLObjectType({
             type: TeacherType,
             args: { code: { type: GraphQLString } },
             resolve: async (_, args) => {
-                console.log(args.code);
                 return await getTeacherByCode(args.code);
             }
         },
