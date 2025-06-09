@@ -1,11 +1,10 @@
 import React from 'react';
-import { dayArray, dayKeys, timeArray } from './utils';
 import ScheduleGrid from './ScheduleGrid';
 
-export default function PlotSchedule({ schedule }) {
+export default function PlotSchedule() {
     return (
-        <div className="overflow-x-auto">
-            <ScheduleGrid schedule={schedule} />
+        <div className="overflow-x-auto w-full">
+            <ScheduleGrid />
         </div>
     );
 }

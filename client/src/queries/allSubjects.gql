@@ -1,0 +1,7 @@
+query GetAllSubjects{
+    subjects {
+        code
+        name
+        type
+    }
+}
