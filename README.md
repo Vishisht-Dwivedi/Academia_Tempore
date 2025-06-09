@@ -6,7 +6,12 @@
 > *Authority through the Order of Time.*
 
 ---
+## Current Screenshots of the UI(responsive)
+<img width="958" alt="Screenshot 2025-06-09 120042" src="https://github.com/user-attachments/assets/217e8acf-37b1-4cc7-b960-266a6380adc4" />
+<img width="947" alt="Screenshot 2025-06-09 120131" src="https://github.com/user-attachments/assets/ccf2e84f-be9d-4967-9f8a-af8064fd9c79" />
+<img width="949" alt="Screenshot 2025-06-09 120022" src="https://github.com/user-attachments/assets/80046bed-9301-4436-ae50-915badf249ee" />
 
+---
 ## 🧭 Overview
 
 **Academia Tempore** is a comprehensive, modular timetable scheduling system built to automate, validate, and intelligently manage academic schedules. Designed for institutional use, this system eliminates manual scheduling conflicts while supporting dynamic curricular structures, multi-entity relations, and constraint-based logic.
