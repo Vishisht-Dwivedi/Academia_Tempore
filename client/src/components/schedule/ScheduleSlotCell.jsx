@@ -14,26 +14,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import useScheduleStore from '@/stores/useScheduleStore';
-
+import { Slot } from '@/constructors/Schedule/slot';
 export default function ScheduleSlotCell({ day, slotNumber }) {
-    const { stagingSchedule, setStagingSchedule } = useScheduleStore();
-
+    //global stuff 
+    const { stagingSchedule, setStagingSchedule, schedule } = useScheduleStore();
     const slot = stagingSchedule?.[day]?.find(s => s.slot === slotNumber);
-
+    //local states
     const [subject, setSubject] = useState(slot?.subject || '');
     const [room, setRoom] = useState(slot?.room || '');
     const [type, setType] = useState(slot?.type || '');
-
+    //render the slot with different colors
     const isTheory = slot?.type === 'theory';
     const bgColor = slot
         ? isTheory
             ? 'bg-violet-100 border-violet-400'
             : 'bg-blue-100 border-violet-400'
         : 'bg-white';
-
+    //adding changes to local stagedSchedule
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Submit called")
+        try {
+            const slotToAdd = new Slot(slotNumber, subject, room, type, schedule.name);
+            const LocalSchedule = structuredClone(stagingSchedule);
+            if (!slot) {
+                if (!LocalSchedule[day]) LocalSchedule[day] = [];
+                LocalSchedule[day].push(slotToAdd);
+                setStagingSchedule(LocalSchedule);
+            }
+        } catch (error) {
+            alert(error);
+        }
     };
 
     return (

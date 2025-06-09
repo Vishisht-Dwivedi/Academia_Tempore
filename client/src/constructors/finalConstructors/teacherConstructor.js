@@ -1,6 +1,6 @@
 import Subject from "./subjectConstructor.js";
-import { capitalizeName } from "./utils/capitalizeString.js";
-import { normalizeString } from "./utils/normalizeString.js";
+import { capitalizeName } from "../utils/capitalizeString.js";
+import { normalizeString } from "../utils/normalizeString.js";
 
 /**
  * Represents a Teacher with associated classes and subjects.
