@@ -107,7 +107,9 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>
-                        <Button type="submit">Save Changes</Button>
+                        <DialogClose asChild>
+                            <Button type="submit">Save Changes</Button>
+                        </DialogClose>
                     </DialogFooter>
                 </form>
             </DialogContent>

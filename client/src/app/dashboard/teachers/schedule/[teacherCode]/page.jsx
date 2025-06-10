@@ -32,7 +32,7 @@ export default function TeacherSchedule() {
     }, [teacherCode]);
 
     const handleDiscardChanges = () => {
-        resetStaging();
+        setStagingSchedule(structuredClone(schedule.schedule));
     };
 
     const handlePublishChanges = () => {
