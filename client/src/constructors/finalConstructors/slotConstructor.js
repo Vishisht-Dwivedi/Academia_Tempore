@@ -1,5 +1,5 @@
 import Subject from "./subjectConstructor.js";
-import { normalizeString } from "./utils/normalizeString.js";
+import { normalizeString } from "../utils/normalizeString.js";
 
 /**
  * Represents a scheduled time slot with an associated subject and teacher.

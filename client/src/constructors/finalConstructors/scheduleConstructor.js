@@ -1,5 +1,5 @@
 import Slot from "./slotConstructor.js";
-import { normalizeString } from "./utils/normalizeString.js";
+import { normalizeString } from "../utils/normalizeString.js";
 
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 

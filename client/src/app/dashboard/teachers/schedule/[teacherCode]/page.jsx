@@ -7,6 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import PlotSchedule from "@/components/schedule/PlotSchedule";
 import { Button } from "@/components/ui/button";
 import useScheduleStore from "@/stores/useScheduleStore";
+import updateSchedule from "@/utils/updateSchedule";
 
 export default function TeacherSchedule() {
     const { teacherCode } = useParams();
@@ -32,12 +33,12 @@ export default function TeacherSchedule() {
     }, [teacherCode]);
 
     const handleDiscardChanges = () => {
-        resetStaging();
+        setStagingSchedule(structuredClone(schedule.schedule));
     };
 
     const handlePublishChanges = () => {
         console.log("Publishing...", stagingSchedule);
-        // TODO: Call GraphQL mutation here
+        updateSchedule(stagingSchedule);
     };
 
     const hasUnsavedChanges =

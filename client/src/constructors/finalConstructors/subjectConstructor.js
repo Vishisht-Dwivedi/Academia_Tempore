@@ -1,5 +1,5 @@
-import { capitalizeName } from "./utils/capitalizeString.js";
-import { normalizeString } from "./utils/normalizeString.js";
+import { capitalizeName } from "../utils/capitalizeString.js";
+import { normalizeString } from "../utils/normalizeString.js";
 
 const validTypes = ["theory", "lab"];
 

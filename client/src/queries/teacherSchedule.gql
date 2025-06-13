@@ -7,30 +7,35 @@ query GetTeacherSchedule($code: String!) {
         subject
         room
         type
+        teacher
       }
       tuesday {
         slot
         subject
         room
         type
+        teacher
       } 
       wednesday {
         slot
         subject
         room
         type
+        teacher
       }
       thursday {
         slot
         subject
         room
         type
+        teacher
       }
       friday {
         slot
         subject
         room
         type
+        teacher
       }
     }
   }
