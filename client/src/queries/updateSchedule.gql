@@ -1,0 +1,39 @@
+mutation UpdateSchedule($schedule: ScheduleInput!) {
+  updateSchedule(schedule: $schedule) {
+    monday {
+      slot
+      subject
+      type
+      room
+      teacher
+    }
+    tuesday {
+      slot
+      subject
+      type
+      room
+      teacher
+    }
+    wednesday {
+      slot
+      subject
+      type
+      room
+      teacher
+    }
+    thursday {
+      slot
+      subject
+      type
+      room
+      teacher
+    }
+    friday {
+      slot
+      subject
+      type
+      room
+      teacher
+    }
+  }
+}
