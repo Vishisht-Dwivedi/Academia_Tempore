@@ -15,7 +15,7 @@ export default class Teacher {
      * @param {string} name - The full name of the teacher. Will be capitalized.
      * @param {string} code - A unique identifier for the teacher. Will be normalized (lowercased, trimmed, etc.).
      */
-    constructor(name, code) {
+    constructor({ name, code }) {
         if (!name || !code) throw new Error("Teacher must have a name and code");
 
         /**

@@ -33,12 +33,12 @@ export default class Slot {
          * @type {Subject}
          * @description A Subject instance constructed from the given subject tuple [name, code, type].
          */
-        this.subject = new Subject(...subject);
+        this.subject = new Subject(subject);
 
         /**
          * @type {Teacher}
          * @description A Teacher instance constructed from the given teacher tuple [name, code].
          */
-        this.teacher = new Teacher(...teacher);
+        this.teacher = new Teacher(teacher);
     }
 }

@@ -19,7 +19,7 @@ export default class Subject {
      * @throws {Error} If name, code, or type is missing.
      * @throws {Error} If the provided type is not one of the valid types ("theory", "lab").
      */
-    constructor(name, code, type) {
+    constructor({ name, code, type }) {
         if (!code || !name || !type) {
             throw new Error("Subject must have a code, name and type");
         }

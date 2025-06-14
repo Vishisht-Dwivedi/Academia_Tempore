@@ -9,7 +9,7 @@ import Teacher from "../../constructors/teacherConstructor.js";
  */
 export default async function createTeacher(teacher) {
     try {
-        const validatedTeacher = new Teacher(...teacher);
+        const validatedTeacher = new Teacher(teacher);
 
         const existingTeacher = await TeacherModel.findOne({
             code: validatedTeacher.code
@@ -18,7 +18,7 @@ export default async function createTeacher(teacher) {
         if (existingTeacher) {
             return {
                 success: false,
-                error: "Teacher with this code already exists",
+                error: `Teacher with code : ${validatedTeacher.code} already exists`,
             };
         }
 
