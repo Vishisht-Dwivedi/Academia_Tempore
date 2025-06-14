@@ -1,37 +1,26 @@
 import Subject from "./subjectConstructor.js";
-import { normalizeString } from "./utils/normalizeString.js";
+import Teacher from "./teacherConstructor.js";
 
 /**
- * Represents a scheduled time slot with an associated subject and teacher.
+ * Represents a single time slot in a classroom schedule, with an associated subject and teacher.
  *
  * @class
  */
 export default class Slot {
     /**
-     * Creates a Slot instance.
+     * Creates a new Slot instance.
      *
      * @constructor
-     * @param {number} slot - The slot number (must be between 1 and 8).
-     * @param {Object} subject - The subject object associated with this slot. Must contain `name`, `code`, and `type`.
-     * @param {string} teacherCode - The code of the teacher assigned to this slot.
+     * @param {number} slot - The slot number (from 1 to 8) representing a time period in the day.
+     * @param {[string, string, string]} subject - An array representing a subject: [name, code, type].
+     * @param {[string, string]} teacher - An array representing a teacher: [name, code].
      *
-     * @throws {Error} If any required field is missing or invalid.
-     * @throws {Error} If `slot` is not a number between 1 and 8.
-     * @throws {Error} If `subject.code`, `subject.type`, or `teacherCode` are not strings.
+     * @throws {Error} If the slot is not a number between 1 and 8.
+     * @throws {Error} If the subject or teacher constructors throw due to invalid input.
      */
-    constructor(slot, subject, teacherCode) {
-        const { name, code, type } = subject;
-
-        if (!slot || typeof subject !== "object" || !code || !type || !teacherCode) {
-            throw new Error(`Slot must have a slot number: ${slot}, subjectCode: ${code}, subjectType: ${type} and teacherCode: ${teacherCode} at subject: ${subject}`);
-        }
-
+    constructor(slot, subject, teacher) {
         if (typeof slot !== "number" || slot < 1 || slot > 8) {
             throw new Error(`Slot ${slot} must be a number within 1-8`);
-        }
-
-        if (typeof code !== "string" || typeof teacherCode !== "string" || typeof type !== "string") {
-            throw new Error(`subjectCode: ${code}, teacherCode: ${teacherCode} and subjectType: ${type} must be strings`);
         }
 
         /**
@@ -41,15 +30,15 @@ export default class Slot {
         this.slot = slot;
 
         /**
-         * @type {string}
-         * @description Normalized teacher code assigned to this slot.
+         * @type {Subject}
+         * @description A Subject instance constructed from the given subject tuple [name, code, type].
          */
-        this.teacher = normalizeString(teacherCode);
+        this.subject = new Subject(...subject);
 
         /**
-         * @type {Subject}
-         * @description A Subject instance constructed from the given subject object.
+         * @type {Teacher}
+         * @description A Teacher instance constructed from the given teacher tuple [name, code].
          */
-        this.subject = new Subject(name, code, type);
+        this.teacher = new Teacher(...teacher);
     }
 }
