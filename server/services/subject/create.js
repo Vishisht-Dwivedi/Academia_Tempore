@@ -6,7 +6,7 @@ import Subject from "../../constructors/subjectConstructor.js";
  *
  * @async
  * @function createSubject
- * @param {Array<string>} subject - An object of subject attributes: name, code, type.
+ * @param {Object<string> {name, code, type}} subject - An object of subject attributes: name, code, type.
  * @returns {Promise<Object>} A result object containing the operation's status.
  * 
  * @property {boolean} success - Whether the operation succeeded or failed.

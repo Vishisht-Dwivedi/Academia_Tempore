@@ -1,4 +1,3 @@
-import Subject from "./subjectConstructor.js";
 import { capitalizeName } from "./utils/capitalizeString.js";
 import { normalizeString } from "./utils/normalizeString.js";
 

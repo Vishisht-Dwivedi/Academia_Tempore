@@ -12,8 +12,8 @@ export default class Slot {
      *
      * @constructor
      * @param {number} slot - The slot number (from 1 to 8) representing a time period in the day.
-     * @param {[string, string, string]} subject - An array representing a subject: [name, code, type].
-     * @param {[string, string]} teacher - An array representing a teacher: [name, code].
+     * @param {name: string, code: string, type: string} subject - An object representing a subject: {name, code, type}.
+     * @param {name: string, code: string} teacher - An object representing a teacher: {name, code}.
      *
      * @throws {Error} If the slot is not a number between 1 and 8.
      * @throws {Error} If the subject or teacher constructors throw due to invalid input.
