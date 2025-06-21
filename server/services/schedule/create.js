@@ -7,13 +7,13 @@ import createSlot from "./slot/create.js";
  * @async
  * @function createSchedule
  * @param {string} day - The day for the schedule (e.g., "Monday").
- * @param {Array<Object>} slots - Array of slot objects, each containing subject & teacher.
+ * @param {Array<Object>} slots - Array of slot objects, each containing slot, subject & teacher.
  *
  * @returns {Promise<Object>} A validated, ID-resolved schedule object.
  *
  * @throws {Error} If validation or slot creation fails.
  */
-export default async function createSchedule(day, slots) {
+export default async function createSchedule({ day, slots }) {
     const validatedSchedule = new Schedule(day, slots);
 
     const slotsToSave = await Promise.all(

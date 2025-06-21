@@ -18,11 +18,7 @@ export default async function createTeacher(teacher) {
         }).session(session);
 
         if (existingTeacher) {
-            await session.abortTransaction();
-            return {
-                success: false,
-                error: `Teacher with code : ${validatedTeacher.code} already exists`,
-            };
+            throw new Error(`Teacher with code : ${validatedTeacher.code} already exists`);
         }
 
         const savedTeacher = await new TeacherModel(validatedTeacher).save({ session });
