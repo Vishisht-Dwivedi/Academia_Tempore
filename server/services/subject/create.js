@@ -1,6 +1,5 @@
 import SubjectModel from "../../models/Subjects.js";
 import Subject from "../../constructors/subjectConstructor.js";
-import mongoose from "mongoose";
 
 /**
  * Creates and saves a new subject to the database after validation.
@@ -18,37 +17,27 @@ import mongoose from "mongoose";
  *
  */
 export default async function createSubject(subject) {
-    const session = await mongoose.startSession();
     try {
-        session.startTransaction();
         const validatedSubject = new Subject(subject);
 
         const existingSubject = await SubjectModel.findOne({
             code: validatedSubject.code,
             type: validatedSubject.type
-        }).session(session);
+        })
 
         if (existingSubject) {
-            await session.abortTransaction();
-            return {
-                success: false,
-                error: `Subject with code: ${validatedSubject.code} and type: ${validatedSubject.type} already exists`,
-            };
+            throw new Error(`Subject with code: ${validatedSubject.code} and type: ${validatedSubject.type} already exists`);
         }
 
-        const savedSubject = await new SubjectModel(validatedSubject).save({ session });
-        await session.commitTransaction();
+        const savedSubject = await new SubjectModel(validatedSubject).save();
         return {
             success: true,
             data: savedSubject.toObject(),
         };
     } catch (error) {
-        await session.abortTransaction();
         return {
             success: false,
             error: error.message || "Unknown error",
         };
-    } finally {
-        session.endSession();
     }
 }
