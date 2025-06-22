@@ -18,13 +18,17 @@ import createTeacher from "../../teacher/create.js";
 
 export default async function teacherToID(teacher) {
     const validatedTeacher = new Teacher(teacher);
-    let TeacherDoc = await TeacherModel.findOne({ code: validatedTeacher.code }).lean();
-    if (!TeacherDoc) {
-        const createdTeacher = await createTeacher(validatedTeacher);
-        if (!createdTeacher.success) {
-            throw new Error(`Failed to create teacher with code: ${teacher.code}`);
+    try {
+        let TeacherDoc = await TeacherModel.findOne({ code: validatedTeacher.code });
+        if (!TeacherDoc) {
+            const createdTeacher = await createTeacher(validatedTeacher);
+            if (!createdTeacher.success) {
+                throw new Error(`Failed to create teacher with code: ${teacher.code}`);
+            }
+            TeacherDoc = createdTeacher.data;
         }
-        TeacherDoc = createdTeacher.data;
+        return TeacherDoc._id;
+    } catch (error) {
+        throw Error(error.message);
     }
-    return TeacherDoc._id;
 }

@@ -2,7 +2,7 @@ import Classrooms from "../../constructors/classroomConstructor.js";
 import createSchedule from "../schedule/create.js";
 import mongoose from "mongoose";
 import ClassroomModel from "../../models/Classrooms.js";
-
+import buildTeacherSubjectMap from "../utils/backlink/buildTeacherSubjectMap.js";
 /**
  * Creates a classroom document in the database after validating structure and schedule,
  * resolving all referenced teacher and subject ObjectIDs, and preventing duplicates.
@@ -37,7 +37,7 @@ export default async function createClassroom(room, schedule) {
 
     const session = await mongoose.startSession();
     try {
-        await session.startTransaction();
+        session.startTransaction();
 
         const existingRoom = await ClassroomModel.findOne({ room: validatedClassroom.room }).session(session);
         if (existingRoom) {
@@ -48,7 +48,7 @@ export default async function createClassroom(room, schedule) {
             room: validatedClassroom.room,
             schedule: scheduleToSave
         };
-
+        buildTeacherSubjectMap(classroomToSave.schedule);
         const savedDoc = await new ClassroomModel(classroomToSave).save({ session });
 
         await session.commitTransaction();

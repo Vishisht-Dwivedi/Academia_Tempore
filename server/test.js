@@ -12,8 +12,8 @@ try {
     process.exit(1);
 }
 try {
-    const rk = await getTeacherByCode("rk");
-    const rkFree = await isTeacherFree({ slot: 1, day: "Monday" }, rk.data);
+    const rk = await getTeacherByCode("vb");
+    console.log(rk);
 } catch (error) {
     console.log(error);
 } finally {

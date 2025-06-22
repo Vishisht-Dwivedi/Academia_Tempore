@@ -1,6 +1,5 @@
 import Schedule from "../../constructors/scheduleConstructor.js";
 import createSlot from "./slot/create.js";
-
 /**
  * Creates a schedule document-ready object from a day and slot definitions.
  *
@@ -19,9 +18,9 @@ export default async function createSchedule({ day, slots }) {
     const slotsToSave = await Promise.all(
         validatedSchedule.slots.map(slot => createSlot(slot))
     );
-
-    return {
+    const scheduleToSave = {
         day: validatedSchedule.day,
         slots: slotsToSave
     };
+    return scheduleToSave;
 }
