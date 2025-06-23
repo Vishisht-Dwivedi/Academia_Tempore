@@ -2,13 +2,13 @@ import Classrooms from "../../constructors/classroomConstructor.js";
 import createSchedule from "../schedule/create.js";
 import mongoose from "mongoose";
 import ClassroomModel from "../../models/Classrooms.js";
-import buildTeacherSubjectMap from "../utils/backlink/buildTeacherSubjectMap.js";
+import verifyAndLink from "./utils/verifyAndLinkClassroom.js";
+import injectRoomId from "./utils/injectRoomId.js";
+import stripRoomId from "./utils/stripRoomId.js";
+
 /**
  * Creates a classroom document in the database after validating structure and schedule,
  * resolving all referenced teacher and subject ObjectIDs, and preventing duplicates.
- *
- * This function wraps the operation in a MongoDB transaction to ensure atomicity.
- * Schedule validation and per-day slot checks are delegated to the constructor layer.
  *
  * @async
  * @function createClassroom
@@ -17,53 +17,59 @@ import buildTeacherSubjectMap from "../utils/backlink/buildTeacherSubjectMap.js"
  *     where each contains the day and an array of slots.
  *     Each slot must include:
  *     - `slot`: number (1–8),
- *     - `subject`: { name: string, code: string, type: "Theory" | "Lab" },
- *     - `teacher`: { name: string, code: string }
+ *     - `subject`: { name, code, type },
+ *     - `teacher`: { name, code }
  *
- * @returns {Promise<{ success: boolean, data?: Object, error?: string }>} Result object:
- *     - `success: true` and `data`: inserted document on success,
- *     - `success: false` and `error`: error message on failure
- *
- * @throws {Error} If validation fails or a room with the same name already exists.
+ * @returns {Promise<{ success: boolean, data?: Object, error?: string }>}
  */
 export default async function createClassroom(room, schedule) {
     const validatedClassroom = new Classrooms(room, schedule);
+    let session;
 
-    const scheduleToSave = await Promise.all(
-        validatedClassroom.schedule.map((daySchedule) =>
-            createSchedule(daySchedule)
-        )
-    );
-
-    const session = await mongoose.startSession();
     try {
+        const scheduleToSave = await Promise.all(
+            validatedClassroom.schedule.map((daySchedule) =>
+                createSchedule(daySchedule)
+            )
+        );
+
+        session = await mongoose.startSession();
         session.startTransaction();
 
         const existingRoom = await ClassroomModel.findOne({ room: validatedClassroom.room }).session(session);
         if (existingRoom) {
-            throw new Error(`Room : ${room} already exists`);
+            throw new Error(`Room "${room}" already exists`);
         }
 
-        const classroomToSave = {
+        const classroomDoc = new ClassroomModel({
             room: validatedClassroom.room,
-            schedule: scheduleToSave
-        };
-        buildTeacherSubjectMap(classroomToSave.schedule);
-        const savedDoc = await new ClassroomModel(classroomToSave).save({ session });
+            schedule: scheduleToSave,
+        });
+
+        const savedDoc = await classroomDoc.save({ session });
+
+        const scheduleWithRoom = injectRoomId(scheduleToSave, savedDoc._id);
+
+        await verifyAndLink(scheduleWithRoom);
 
         await session.commitTransaction();
 
         return {
             success: true,
-            data: savedDoc
+            data: savedDoc,
         };
     } catch (error) {
-        await session.abortTransaction();
+        if (session) {
+            await session.abortTransaction();
+        }
+
+        console.error("Error in createClassroom:", error);
         return {
             success: false,
-            error: error.message || "Unknown Error occurred"
+            error: error.message || "Unknown error occurred during classroom creation",
         };
     } finally {
-        await session.endSession();
+        if (session) session.endSession();
     }
 }
+
