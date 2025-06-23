@@ -23,7 +23,7 @@ export default async function addBacklink(teacherId, subjectId, roomId) {
             )
         ]);
     } catch (err) {
-        console.error(`Failed to add backlink → T: ${teacherId}, S: ${subjectId}, R: ${roomId}`);
+        console.error(`Failed to add backlink - T: ${teacherId}, S: ${subjectId}, R: ${roomId}`);
         throw err;
     }
 }
