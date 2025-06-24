@@ -21,7 +21,7 @@ const SlotSchema = new Schema({
 const DayScheduleSchema = new Schema({
     day: {
         type: String,
-        enum: ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+        enum: ["monday", "tuesday", "wednesday", "thursday", "friday"],
         required: true
     },
     slots: {

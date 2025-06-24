@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError } from "graphql";
 import { TeacherType } from "./Teacher.js";
-import { getTeacherByID } from "../../services/read/readTeacher.js";
+import { getTeacherByID } from "../../services/teacher/read.js";
 export const SubjectType = new GraphQLObjectType({
     name: "Subject",
     fields: () => ({
