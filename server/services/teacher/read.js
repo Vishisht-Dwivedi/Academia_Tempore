@@ -2,9 +2,7 @@ import TeacherModel from "../../models/Teachers.js";
 import getTeacherSchedule from "./utils/getTeacherSchedule.js";
 
 export const getTeacherByCode = async (code) => {
-    const teacher = await TeacherModel.findOne({ code })
-        .populate("classes")
-        .lean();
+    const teacher = await TeacherModel.findOne({ code }).lean();
 
     if (!teacher) {
         throw new Error(`Teacher with code: ${code} not found`);
