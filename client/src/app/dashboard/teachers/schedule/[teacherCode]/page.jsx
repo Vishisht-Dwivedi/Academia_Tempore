@@ -39,6 +39,7 @@ export default function TeacherSchedule() {
     const handlePublishChanges = () => {
         console.log("Publishing...", stagingSchedule);
         updateSchedule(stagingSchedule);
+
     };
 
     const hasUnsavedChanges =

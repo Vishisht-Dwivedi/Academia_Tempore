@@ -1,9 +1,9 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError } from "graphql";
-import { getSubjectByID } from "../../services/read/readSubject.js";
-import { getClassroomByID } from "../../services/read/readClassroom.js";
+import { getSubjectByID } from "../../services/subject/read.js";
+import { getClassroomByID } from "../../services/classroom/read.js";
 import { ScheduleType } from "./Schedule.js";
 import { SubjectType } from "./Subject.js";
-import getTeacherSchedule from "../../logic/getTeacherSchedule.js";
+import { getTeacherSchedule } from "../../services/teacher/read.js";
 import { ClassroomType } from "./Classroom.js";
 export const TeacherType = new GraphQLObjectType({
     name: "Teacher",

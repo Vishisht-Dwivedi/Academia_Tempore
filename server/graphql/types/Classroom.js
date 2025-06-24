@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError } from "graphql";
 import { ScheduleType } from "./Schedule.js";
-import getClassroomSchedule from "../../logic/getClassroomSchedule.js";
+import { getClassroomSchedule } from "../../services/classroom/read.js";
 export const ClassroomType = new GraphQLObjectType({
     name: "Classroom",
     fields: () => ({
