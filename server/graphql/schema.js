@@ -1,10 +1,15 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError, GraphQLSchema } from "graphql";
+import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError, GraphQLSchema, GraphQLNonNull } from "graphql";
 import { ClassroomType } from "./types/Classroom.js";
 import { SubjectType } from "./types/Subject.js";
 import { TeacherType } from "./types/Teacher.js";
 import { getAllTeachers, getTeacherByCode } from "../services/teacher/read.js";
 import { getAllSubjects, getSubjectByCodeAndType } from "../services/subject/read.js";
 import { getAllClassrooms, getClassroom } from "../services/classroom/read.js";
+
+//creation functions
+import createTeacher from "../services/teacher/create.js";
+import createSubject from "../services/subject/create.js";
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: () => ({
@@ -52,9 +57,39 @@ const RootQuery = new GraphQLObjectType({
         }
     })
 });
-
+const MutationQuery = new GraphQLObjectType({
+    name: "Mutation",
+    fields: () => ({
+        createTeacher: {
+            type: TeacherType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                code: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, args) => {
+                const result = await createTeacher(args);
+                if (!result.success) throw new Error(result.error);
+                return result.data;
+            }
+        },
+        createSubject: {
+            type: SubjectType,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) },
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                type: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, args) => {
+                const result = await createSubject(args);
+                if (!result.success) throw new Error(result.error);
+                return result.data;
+            }
+        },
+    })
+})
 const schema = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: MutationQuery
 })
 
 export default schema;
