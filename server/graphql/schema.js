@@ -31,6 +31,8 @@ import { updateSchedule } from "../services/schedule/update.js";
 
 //delete
 import { removeScheduleSlot } from "../services/schedule/delete.js";
+import deleteTeacher from "../services/teacher/delete.js";
+import deleteClassroom from "../services/classroom/delete.js";
 
 // root query
 const RootQuery = new GraphQLObjectType({
@@ -140,6 +142,34 @@ const MutationQuery = new GraphQLObjectType({
             resolve: async (_, { input }) => {
                 const result = await removeScheduleSlot(input);
                 if (!result.success) throw new Error(result.error || "Failed to remove slot");
+                return result.message;
+            }
+        },
+        deleteTeacher: {
+            type: new GraphQLObjectType({
+                name: "DeleteTeacher",
+                fields: {
+                    success: { type: GraphQLString },
+                    message: { type: GraphQLString }
+                }
+            }),
+            args: {
+                code: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, { code }) => {
+                const result = await deleteTeacher(code);
+                if (!result.success) throw new Error(result.message || "Failed to delete teacher");
+                return result;
+            }
+        },
+        deleteClassroom: {
+            type: GraphQLString,
+            args: {
+                room: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, { room }) => {
+                const result = await deleteClassroom(room);
+                if (!result.success) throw new Error(result.error || "Failed to delete classroom");
                 return result.message;
             }
         }

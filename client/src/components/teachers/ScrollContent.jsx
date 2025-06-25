@@ -5,7 +5,12 @@ import { TrashIcon } from "lucide-react"
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import deleteTeacher from "@/utils/deleteTeacher"
 export default function ScrollContent({ elementArray }) {
+    const handleDelete = async (code) => {
+        const res = await deleteTeacher(code);
+        alert(res);
+    }
     return (
         <ScrollArea className="h-70 px-2">
             <ol className="h-auto px-2">
@@ -29,7 +34,7 @@ export default function ScrollContent({ elementArray }) {
                                     </HoverCard>
                                     <HoverCard>
                                         <HoverCardTrigger>
-                                            <Button variant="outline">
+                                            <Button variant="destructive" onClick={() => { handleDelete(val.code) }}>
                                                 <TrashIcon />
                                             </Button>
                                         </HoverCardTrigger>

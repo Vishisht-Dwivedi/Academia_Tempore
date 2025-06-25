@@ -1,0 +1,3 @@
+mutation DeleteClassroom($room: String!) {
+  deleteClassroom(room: $room)
+}

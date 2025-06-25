@@ -15,6 +15,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import useScheduleStore from '@/stores/useScheduleStore';
 import { Slot } from '@/constructors/Schedule/slot';
+import removeSlot from '@/utils/removeSlot';
+
+
 export default function ScheduleSlotCell({ day, slotNumber }) {
     //global stuff 
     const { stagingSchedule, setStagingSchedule, schedule } = useScheduleStore();
@@ -23,7 +26,7 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
     const [subject, setSubject] = useState(slot?.subject || '');
     const [room, setRoom] = useState(slot?.room || '');
     const [type, setType] = useState(slot?.type || '');
-    const [teacher, setTeacher] = useState(slot?.teacher || '');
+    const [teacher, setTeacher] = useState(slot?.teacher || schedule.name || '');
     //render the slot with different colors
     const isTheory = slot?.type === 'theory';
     const bgColor = slot
@@ -47,6 +50,14 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
             alert(error);
         }
     };
+    // deleting a slot 
+    const deleteSlot = async () => {
+        try {
+            await removeSlot({ room, day, slot: slotNumber });
+        } catch (error) {
+            alert(error);
+        }
+    }
 
     return (
         <Dialog>
@@ -115,6 +126,11 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                     </div>
 
                     <DialogFooter>
+                        {schedule.schedule[day].find((s) => s.slot === slotNumber)?.teacher &&
+                            <DialogClose asChild>
+                                <Button variant="destructive" onClick={deleteSlot}>Delete</Button>
+                            </DialogClose>
+                        }
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>

@@ -1,0 +1,3 @@
+mutation RemoveScheduleSlot($input: RemoveSlotInput!) {
+  removeScheduleSlot(input: $input)
+}

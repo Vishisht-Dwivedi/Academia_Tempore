@@ -2,10 +2,11 @@ import ClassroomModel from "../../models/Classrooms.js";
 import TeacherModel from "../../models/Teachers.js";
 import SubjectModel from "../../models/Subjects.js";
 
-export default async function deleteTeacher(teacherID) {
-    const teacher = await TeacherModel.findById(teacherID);
+export default async function deleteTeacher(teacherCode) {
+    const validatedCode = teacherCode.toLowerCase().trim();
+    const teacher = await TeacherModel.findOne({ code: validatedCode });
     if (!teacher) {
-        throw new Error(`Teacher with id: ${teacherID} not found`);
+        throw new Error(`Teacher with id: ${teacherCode} not found`);
     }
 
     // Remove teacher from all linked classrooms
@@ -16,7 +17,7 @@ export default async function deleteTeacher(teacherID) {
         let updated = false;
 
         for (const day of roomDoc.schedule) {
-            const newSlots = day.slots.filter(slot => slot.teacher.toString() !== teacherID.toString());
+            const newSlots = day.slots.filter(slot => slot.teacher.toString() !== teacher._id.toString());
             if (newSlots.length !== day.slots.length) {
                 day.slots = newSlots;
                 updated = true;
@@ -30,12 +31,12 @@ export default async function deleteTeacher(teacherID) {
 
     // Remove teacher from all linked subjects
     await SubjectModel.updateMany(
-        { teachers: teacherID },
-        { $pull: { teachers: teacherID } }
+        { teachers: teacher._id },
+        { $pull: { teachers: teacher._id } }
     );
 
     // Delete teacher document
-    await TeacherModel.findByIdAndDelete(teacherID);
+    await TeacherModel.findByIdAndDelete(teacher._id);
 
     return {
         success: true,

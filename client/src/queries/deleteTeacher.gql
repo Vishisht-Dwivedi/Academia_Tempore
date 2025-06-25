@@ -1,0 +1,6 @@
+mutation DeleteTeacher($code: String!) {
+  deleteTeacher(code: $code) {
+    success
+    message
+  }
+}
