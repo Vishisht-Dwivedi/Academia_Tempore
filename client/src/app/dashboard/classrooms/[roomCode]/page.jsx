@@ -36,10 +36,10 @@ export default function ClassroomSchedule() {
         setStagingSchedule(structuredClone(schedule.schedule));
     };
 
-    const handlePublishChanges = () => {
+    const handlePublishChanges = async () => {
         console.log("Publishing...", stagingSchedule);
-        updateSchedule(stagingSchedule);
-
+        const res = updateSchedule(stagingSchedule);
+        console.log(res);
     };
 
     const hasUnsavedChanges =

@@ -23,6 +23,7 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
     const [subject, setSubject] = useState(slot?.subject || '');
     const [room, setRoom] = useState(slot?.room || '');
     const [type, setType] = useState(slot?.type || '');
+    const [teacher, setTeacher] = useState(slot?.teacher || '');
     //render the slot with different colors
     const isTheory = slot?.type === 'theory';
     const bgColor = slot
@@ -34,7 +35,8 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         try {
-            const slotToAdd = new Slot(slotNumber, subject, room, type, schedule.name);
+            const slotToAdd = new Slot(slotNumber, subject, room, type, teacher);
+            console.log(slotToAdd);
             const LocalSchedule = structuredClone(stagingSchedule);
             if (!slot) {
                 if (!LocalSchedule[day]) LocalSchedule[day] = [];
@@ -100,6 +102,15 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                             value={type}
                             onChange={(e) => setType(e.target.value)}
                             placeholder="theory / lab"
+                        />
+                    </div>
+                    <div className='my-2 gap-2 flex flex-col'>
+                        <Label htmlFor="teacherName">Teacher Name</Label>
+                        <Input
+                            id="teacherName"
+                            value={teacher}
+                            onChange={(e) => setTeacher(e.target.value)}
+                            placeholder={teacher}
                         />
                     </div>
 
