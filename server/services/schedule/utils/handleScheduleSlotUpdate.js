@@ -10,7 +10,7 @@ import insertNewSlot from "./insertNewSlot.js";
 
 export const handleScheduleSlotUpdate = async (day, slot) => {
     const teacher = await getTeacherByName(slot.teacher);
-    const subject = await getSubject(slot.subject, slot.type);
+    const subject = await getSubject(slot.subject, slot.type.toLowerCase().trim());
     const teacherFree = await isTeacherFree(teacher._id, day, slot.slot);
 
     if (!teacherFree.free) {

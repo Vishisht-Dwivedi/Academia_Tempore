@@ -58,7 +58,7 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                                 {slot.subject}
                             </span>
                             <span className="text-xs text-muted-foreground">{slot.type}</span>
-                            <span className="text-xs text-muted-foreground">{slot.room}</span>
+                            <span className="text-xs text-muted-foreground">{slot.room || slot.teacher}</span>
                         </>
                     ) : (
                         <span className="text-xs text-gray-400 italic">No Class</span>

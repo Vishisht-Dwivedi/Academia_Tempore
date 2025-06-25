@@ -1,0 +1,37 @@
+query GetClassroomSchedule($room: String) {
+  classroom(room: $room) {
+    room
+    schedule {
+      monday {
+        slot
+        subject
+        teacher
+        type
+      }
+      friday {
+        slot
+        subject
+        teacher
+        type
+      }
+      thursday {
+        slot
+        subject
+        teacher
+        type
+      }
+      tuesday {
+        slot
+        subject
+        teacher
+        type
+      }
+      wednesday {
+        slot
+        subject
+        teacher
+        type
+      }
+    }
+  }
+}

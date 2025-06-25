@@ -17,7 +17,7 @@ export default function ScrollContent({ elementArray }) {
                                 <div className="flex gap-2">
                                     <HoverCard>
                                         <HoverCardTrigger asChild>
-                                            <Link href={`./teachers/schedule/${val.code}`}>
+                                            <Link href={`./teachers/${val.code}`}>
                                                 <Button>
                                                     <CalendarCog />
                                                 </Button>

@@ -30,15 +30,7 @@ const data = {
         {
           title: "Manage",
           url: "/dashboard/teachers"
-        },
-        {
-          title: "View Schedule",
-          url: "/dashboard/teachers/schedule",
-        },
-        {
-          title: "Update Schedule",
-          url: "/dashboard/teachers/update",
-        },
+        }
       ],
     },
     {
@@ -46,20 +38,8 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Add",
-          url: "#",
-        },
-        {
-          title: "View All",
-          url: "#"
-        },
-        {
-          title: "View Schedule",
-          url: "#",
-        },
-        {
-          title: "Update Schedule",
-          url: "#"
+          title: "Manage",
+          url: "/dashboard/classrooms",
         }
       ],
     },
