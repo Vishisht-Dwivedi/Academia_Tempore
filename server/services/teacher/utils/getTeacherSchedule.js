@@ -22,8 +22,9 @@ function serializeSchedule(schedule) {
 export default async function getTeacherSchedule(teacherID) {
     const teacherDoc = await getTeacherByID(teacherID);
     if (!teacherDoc || !teacherDoc.classes || teacherDoc.classes.length === 0) {
-        throw new Error("Teacher or their classes not found.");
+        return serializeSchedule(new Schedule()); // return empty schedule structure
     }
+
     const teacherSchedule = new Schedule();
     try {
         for (const classroom of teacherDoc.classes) {
