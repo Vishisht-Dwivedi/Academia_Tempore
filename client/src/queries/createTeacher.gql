@@ -1,0 +1,7 @@
+# src/queries/createTeacher.gql
+mutation CreateTeacher($name: String!, $code: String!) {
+  createTeacher(name: $name, code: $code) {
+    name
+    code
+  }
+}

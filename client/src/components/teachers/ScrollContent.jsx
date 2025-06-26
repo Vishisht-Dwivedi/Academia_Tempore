@@ -8,8 +8,15 @@ import Link from "next/link"
 import deleteTeacher from "@/utils/deleteTeacher"
 export default function ScrollContent({ elementArray }) {
     const handleDelete = async (code) => {
-        const res = await deleteTeacher(code);
-        alert(res);
+        try {
+            const res = await deleteTeacher(code);
+            alert(res.success);
+            return window.location.reload();
+        } catch (error) {
+            alert(error.message);
+            return window.location.reload();
+        }
+
     }
     return (
         <ScrollArea className="h-70 px-2">

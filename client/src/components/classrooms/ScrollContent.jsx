@@ -11,8 +11,10 @@ export default function ScrollContent({ elementArray }) {
         try {
             const res = await deleteClassroom(room);
             alert(res);
+            return window.location.reload();
         } catch (error) {
             alert(error.message);
+            return window.location.reload();
         }
     }
     return (

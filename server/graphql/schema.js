@@ -24,8 +24,8 @@ import { getAllClassrooms, getClassroom } from "../services/classroom/read.js";
 // create
 import createTeacher from "../services/teacher/create.js";
 import createSubject from "../services/subject/create.js";
-import createClassroom from "../services/classroom/create.js";
-
+import { createClassroom } from "../services/classroom/create.js";
+import { createClassroomByRoom } from "../services/classroom/create.js";
 // update
 import { updateSchedule } from "../services/schedule/update.js";
 
@@ -116,6 +116,16 @@ const MutationQuery = new GraphQLObjectType({
             resolve: async (_, { room, schedule }) => {
                 const result = await createClassroom(room, schedule);
                 if (!result.success) throw new Error(result.error);
+                return result.data;
+            }
+        },
+        createClassroomByRoom: {
+            type: ClassroomType,
+            args: {
+                room: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, { room }) => {
+                const result = await createClassroomByRoom(room);
                 return result.data;
             }
         },

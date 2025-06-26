@@ -1,6 +1,10 @@
 import { client } from "@/lib/graphqlClient.js";
 import UpdateSchedule from "@/queries/updateSchedule.gql"
 export default async function updateSchedule(schedule) {
-    const data = await client.request(UpdateSchedule, { schedule: schedule });
-    return data;
+    try {
+        const data = await client.request(UpdateSchedule, { schedule: schedule });
+        return data;
+    } catch (error) {
+        return error;
+    }
 }

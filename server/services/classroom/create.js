@@ -22,7 +22,7 @@ import stripRoomId from "./utils/stripRoomId.js";
  *
  * @returns {Promise<{ success: boolean, data?: Object, error?: string }>}
  */
-export default async function createClassroom(room, schedule) {
+export const createClassroom = async (room, schedule) => {
     const validatedClassroom = new Classrooms(room, schedule);
     let session;
 
@@ -73,3 +73,24 @@ export default async function createClassroom(room, schedule) {
     }
 }
 
+export const createClassroomByRoom = async (room) => {
+    const validatedRoom = room.trim().toUpperCase();
+    try {
+        const existingRoom = await ClassroomModel.findOne({ room });
+        if (existingRoom) throw new Error(`Room with code: ${room} already exists`);
+        const roomToSave = new ClassroomModel({
+            room: validatedRoom
+        })
+        const roomDoc = await roomToSave.save();
+        return {
+            success: true,
+            data: roomDoc
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error
+        }
+    }
+
+}
