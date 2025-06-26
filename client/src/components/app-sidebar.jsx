@@ -48,17 +48,9 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Add",
-          url: "#",
-        },
-        {
-          title: "View All",
-          url: "#"
-        },
-        {
-          title: "View Associated Teachers",
-          url: "#",
-        },
+          title: "Manage",
+          url: "/dashboard/subjects",
+        }
       ],
     }
   ],

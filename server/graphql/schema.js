@@ -33,6 +33,7 @@ import { updateSchedule } from "../services/schedule/update.js";
 import { removeScheduleSlot } from "../services/schedule/delete.js";
 import deleteTeacher from "../services/teacher/delete.js";
 import deleteClassroom from "../services/classroom/delete.js";
+import deleteSubject from "../services/subject/delete.js";
 
 // root query
 const RootQuery = new GraphQLObjectType({
@@ -180,6 +181,18 @@ const MutationQuery = new GraphQLObjectType({
             resolve: async (_, { room }) => {
                 const result = await deleteClassroom(room);
                 if (!result.success) throw new Error(result.error || "Failed to delete classroom");
+                return result.message;
+            }
+        },
+        deleteSubject: {
+            type: GraphQLString,
+            args: {
+                code: { type: new GraphQLNonNull(GraphQLString) },
+                type: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: async (_, { code, type }) => {
+                const result = await deleteSubject(code, type);
+                if (!result.success) throw new Error(result.message || "Failed to delete subject");
                 return result.message;
             }
         }

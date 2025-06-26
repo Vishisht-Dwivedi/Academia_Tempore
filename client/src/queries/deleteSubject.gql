@@ -1,0 +1,3 @@
+mutation DeleteSubject($code: String!, $type: String!) {
+  deleteSubject(code: $code, type: $type)
+}

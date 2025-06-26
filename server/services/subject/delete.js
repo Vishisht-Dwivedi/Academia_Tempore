@@ -2,10 +2,10 @@ import SubjectModel from "../../models/Subjects.js";
 import ClassroomModel from "../../models/Classrooms.js";
 import TeacherModel from "../../models/Teachers.js";
 
-export default async function deleteSubject(subjectID) {
-    const subject = await SubjectModel.findById(subjectID);
+export default async function deleteSubject(code, type) {
+    const subject = await SubjectModel.findOne({ code, type });
     if (!subject) {
-        throw new Error(`Subject with id: ${subjectID} not found`);
+        throw new Error(`Subject with code: ${code} and type: ${type} not found`);
     }
 
     const teacherIDs = subject.teachers;
@@ -22,7 +22,7 @@ export default async function deleteSubject(subjectID) {
 
             for (const day of roomDoc.schedule) {
                 const newSlots = day.slots.filter(
-                    slot => slot.subject.toString() !== subjectID.toString()
+                    slot => slot.subject.toString() !== subject._id.toString()
                 );
                 if (newSlots.length !== day.slots.length) {
                     day.slots = newSlots;
@@ -38,12 +38,12 @@ export default async function deleteSubject(subjectID) {
 
     // Remove subject from all linked teachers
     await TeacherModel.updateMany(
-        { subjects: subjectID },
-        { $pull: { subjects: subjectID } }
+        { subjects: subject._id },
+        { $pull: { subjects: subject._id } }
     );
 
     // Finally, delete the subject
-    await SubjectModel.findByIdAndDelete(subjectID);
+    await SubjectModel.findByIdAndDelete(subject._id);
 
     return {
         success: true,
