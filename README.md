@@ -70,49 +70,186 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 ## 🗃️ System Architecture
 
 ```
-📦 AcademiaTempore/
-├── client/                        # (To be implemented – frontend interface)
-├── server/
-│   ├── constructors/             # Validation & transformation logic
+## 📁 Project Structure
+
+```bash
+Academia Tempore
+├── server
+│   ├── constructors
 │   │   ├── classroomConstructor.js
 │   │   ├── scheduleConstructor.js
 │   │   ├── slotConstructor.js
 │   │   ├── subjectConstructor.js
 │   │   ├── teacherConstructor.js
-│   │   └── utils/
+│   │   └── utils
 │   │       ├── capitalizeString.js
 │   │       └── normalizeString.js
-│
-│   ├── graphql/                  # GraphQL API logic
-│   │   ├── types/
-│   │   │   ├── Classroom.js
-│   │   │   ├── Schedule.js
-│   │   │   ├── Subject.js
-│   │   │   ├── Teacher.js
-│   │   │   └── schema.js
-│
-│   ├── logic/                    # Business logic & computed queries
-│   │   ├── getClassroomSchedule.js
-│   │   └── getTeacherSchedule.js
-│
-│   ├── models/                   # Mongoose schemas
-│   │   ├── Classroom.js
-│   │   ├── Teacher.js
-│   │   ├── Subject.js
-│   │   └── Schedule.js
-│
-│   ├── services/                 # CRUD operations and utility layers
-│   │   ├── create/
-│   │   ├── delete/
-│   │   ├── read/
-│   │   ├── update/
-│   │   └── utils/
-│
-│   ├── seeds/                    # Data seeding 
-│   ├── node_modules/
-│   └── index.js                  # Entry point
-├── README.md
-
+│   ├── graphql
+│   │   ├── inputs
+│   │   │   ├── DayScheduleInputType.js
+│   │   │   ├── RemoveSlotInputType.js
+│   │   │   ├── ScheduleInputType.js
+│   │   │   ├── SlotInputNestedType.js
+│   │   │   └── SlotInputType.js
+│   │   ├── schema.js
+│   │   └── types
+│   │       ├── Classroom.js
+│   │       ├── Schedule.js
+│   │       ├── Subject.js
+│   │       └── Teacher.js
+│   ├── index.js
+│   ├── models
+│   │   ├── Classrooms.js
+│   │   ├── Schedule.js
+│   │   ├── Subjects.js
+│   │   └── Teachers.js
+│   ├── registerModels.js
+│   ├── seeds
+│   │   ├── classroom_schedule.js
+│   │   ├── seeds.js
+│   │   ├── subjects.js
+│   │   └── teachers.js
+│   ├── services
+│   │   ├── classroom
+│   │   │   ├── create.js
+│   │   │   ├── delete.js
+│   │   │   ├── read.js
+│   │   │   └── utils
+│   │   │       ├── injectRoomId.js
+│   │   │       ├── stripRoomId.js
+│   │   │       └── verifyAndLinkClassroom.js
+│   │   ├── schedule
+│   │   │   ├── create.js
+│   │   │   ├── delete.js
+│   │   │   ├── slot
+│   │   │   │   └── create.js
+│   │   │   ├── update.js
+│   │   │   └── utils
+│   │   │       ├── handleScheduleSlotUpdate.js
+│   │   │       ├── insertNewSlot.js
+│   │   │       └── updateExistingSlot.js
+│   │   ├── subject
+│   │   │   ├── create.js
+│   │   │   ├── delete.js
+│   │   │   └── read.js
+│   │   ├── teacher
+│   │   │   ├── create.js
+│   │   │   ├── delete.js
+│   │   │   ├── read.js
+│   │   │   └── utils
+│   │   │       └── getTeacherSchedule.js
+│   │   └── utils
+│   │       ├── backlink
+│   │       │   └── addBacklink.js
+│   │       ├── collisionDetection
+│   │       │   ├── isClassroomFree.js
+│   │       │   └── isTeacherFree.js
+│   │       └── objToID
+│   │           ├── subjectToID.js
+│   │           └── teacherToID.js
+│   └── test.js
+├── client
+│   ├── README.md
+│   ├── components.json
+│   ├── eslint.config.mjs
+│   ├── jsconfig.json
+│   ├── next.config.mjs
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   ├── public
+│   │   ├── file.svg
+│   │   ├── globe.svg
+│   │   ├── next.svg
+│   │   ├── vercel.svg
+│   │   └── window.svg
+│   └── src
+│       ├── app
+│       │   ├── dashboard
+│       │   │   ├── classrooms
+│       │   │   │   ├── [roomCode]
+│       │   │   │   │   └── page.jsx
+│       │   │   │   └── page.jsx
+│       │   │   ├── layout.jsx
+│       │   │   ├── page.jsx
+│       │   │   ├── subjects
+│       │   │   │   └── page.jsx
+│       │   │   └── teachers
+│       │   │       ├── [teacherCode]
+│       │   │       │   └── page.jsx
+│       │   │       └── page.jsx
+│       │   ├── favicon.ico
+│       │   ├── globals.css
+│       │   ├── layout.js
+│       │   └── page.js
+│       ├── components
+│       │   ├── app-sidebar.jsx
+│       │   ├── classrooms
+│       │   │   ├── AddCard.jsx
+│       │   │   ├── AllClassrooms.jsx
+│       │   │   └── ScrollContent.jsx
+│       │   ├── schedule
+│       │   │   ├── PlotSchedule.jsx
+│       │   │   ├── ScheduleGrid.jsx
+│       │   │   ├── ScheduleHeaderRow.jsx
+│       │   │   ├── ScheduleSlotCell.jsx
+│       │   │   └── utils.js
+│       │   ├── search-form.jsx
+│       │   ├── subjects
+│       │   │   ├── AddCard.jsx
+│       │   │   ├── AllSubjects.jsx
+│       │   │   └── ScrollContent.jsx
+│       │   ├── teachers
+│       │   │   ├── AddCard.jsx
+│       │   │   ├── AllTeachers.jsx
+│       │   │   └── ScrollContent.jsx
+│       │   └── ui
+│       ├── constructors
+│       │   ├── Schedule
+│       │   │   └── slot.js
+│       │   ├── finalConstructors
+│       │   │   ├── classroomConstructor.js
+│       │   │   ├── scheduleConstructor.js
+│       │   │   ├── slotConstructor.js
+│       │   │   ├── subjectConstructor.js
+│       │   │   └── teacherConstructor.js
+│       │   └── utils
+│       │       ├── capitalizeString.js
+│       │       └── normalizeString.js
+│       ├── hooks
+│       │   └── use-mobile.js
+│       ├── lib
+│       │   ├── graphqlClient.js
+│       │   └── utils.js
+│       ├── queries
+│       │   ├── allClassrooms.gql
+│       │   ├── allSubjects.gql
+│       │   ├── allTeachers.graphql
+│       │   ├── classroomSchedule.gql
+│       │   ├── createClassroomByRoom.gql
+│       │   ├── createSubject.gql
+│       │   ├── createTeacher.gql
+│       │   ├── deleteClassroom.gql
+│       │   ├── deleteSubject.gql
+│       │   ├── deleteTeacher.gql
+│       │   ├── removeSlot.gql
+│       │   ├── teacherSchedule.gql
+│       │   └── updateSchedule.gql
+│       ├── stores
+│       │   └── useScheduleStore.js
+│       └── utils
+│           ├── createClassroomByRoom.js
+│           ├── createSubject.js
+│           ├── createTeacher.js
+│           ├── deleteClassroom.js
+│           ├── deleteSubject.js
+│           ├── deleteTeacher.js
+│           ├── getAllClassrooms.js
+│           ├── getAllSubjects.js
+│           ├── getAllTeachers.js
+│           ├── getClasssroomSchedule.js
+│           ├── getTeacherSchedule.js
+│           ├── removeSlot.js
+│           └── updateSchedule.js
 ```
 
 ---
@@ -141,7 +278,7 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 > Over 100 developers have cloned this project—that’s unreal.
 Whether you’re exploring, learning, or building something on top of it—thank you.
 Feel free to open issues, ask questions, or just say hi. I’d love to hear how you’re using it. 🙌
-> The project is under development and the client side is supposed to be rewritten, I'll work on the constraint optimization engine once the basic dashboard is built and implemented.
+> The project is under development, I'll work on the constraint optimization engine once the basic dashboard is built and implemented.
 > ❤️ Cloning this repo? Consider giving it a ⭐ — it means a lot!
 
 ## 🧾 License
