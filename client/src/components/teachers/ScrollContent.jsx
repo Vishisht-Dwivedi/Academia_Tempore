@@ -18,6 +18,13 @@ export default function ScrollContent({ elementArray }) {
         }
 
     }
+    const getTotalClasses = (schedule) => {
+        let totalClasses = 0;
+        for (const day of Object.keys(schedule)) {
+            totalClasses += schedule[day]?.length;
+        }
+        return totalClasses;
+    }
     return (
         <ScrollArea className="h-70 px-2">
             <ol className="h-auto px-2">
@@ -25,7 +32,10 @@ export default function ScrollContent({ elementArray }) {
                     return (
                         <li key={index}>
                             <div className="text-sm w-full flex justify-between">
-                                {val.name}
+                                <p>
+                                    {val.name} <br />
+                                    Classes: {getTotalClasses(val.schedule)}
+                                </p>
                                 <div className="flex gap-2">
                                     <HoverCard>
                                         <HoverCardTrigger asChild>

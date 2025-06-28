@@ -1,6 +1,23 @@
 query GetAllTeachers{
     teachers {
-        code
-        name
+    name
+    code
+    schedule {
+      monday {
+        slot
+      }
+      friday {
+        slot
+      }
+      thursday {
+        slot
+      }
+      tuesday {
+        slot
+      }
+      wednesday {
+        slot
+      }
     }
+  }
 }
