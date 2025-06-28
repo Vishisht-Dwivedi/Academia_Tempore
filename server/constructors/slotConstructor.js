@@ -19,8 +19,8 @@ export default class Slot {
      * @throws {Error} If the subject or teacher constructors throw due to invalid input.
      */
     constructor(slot, subject, teacher) {
-        if (typeof slot !== "number" || slot < 1 || slot > 8) {
-            throw new Error(`Slot ${slot} must be a number within 1-8`);
+        if (typeof slot !== "number" || slot < 1 || slot > 9) {
+            throw new Error(`Slot ${slot} must be a number within 1-9`);
         }
 
         /**

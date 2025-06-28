@@ -16,7 +16,7 @@ import stripRoomId from "./utils/stripRoomId.js";
  * @param {Array<{day: string, slots: Array<Object>}>} schedule - An array of day-wise schedule objects,
  *     where each contains the day and an array of slots.
  *     Each slot must include:
- *     - `slot`: number (1–8),
+ *     - `slot`: number (1–9),
  *     - `subject`: { name, code, type },
  *     - `teacher`: { name, code }
  *

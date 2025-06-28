@@ -7,8 +7,8 @@ export class Slot {
             throw new Error(`Incomplete slot data slot: ${slot} subject:${subject} room:${room} type:${type} teacher:${teacher}`);
         }
 
-        if (slot < 1 || slot > 8) {
-            throw new Error(`slot: ${slot} must be within 1-8`);
+        if (slot < 1 || slot > 9) {
+            throw new Error(`slot: ${slot} must be within 1-9`);
         }
 
         if (!["theory", "lab"].includes(type.trim().toLowerCase())) {
