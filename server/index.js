@@ -8,6 +8,7 @@ import schema from "./graphql/schema.js";
 import "./registerModels.js";
 import next from "next";
 import { parse } from "url";
+import compression from "compression";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ try {
     console.error("MongoDB connection error:", err);
     process.exit(1);
 }
-
+app.use(compression());
 // Apollo GraphQL setup
 const apolloServer = new ApolloServer({ schema });
 await apolloServer.start();

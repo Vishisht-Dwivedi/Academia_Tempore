@@ -1,61 +1,43 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { CalendarCog } from "lucide-react"
-import { TrashIcon } from "lucide-react"
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
-import { Separator } from "@/components/ui/separator"
-import Link from "next/link"
-import deleteClassroom from "@/utils/deleteClassroom"
-export default function ScrollContent({ elementArray }) {
-    const handleDelete = async (room) => {
-        try {
-            const res = await deleteClassroom(room);
-            alert(res);
-            return window.location.reload();
-        } catch (error) {
-            alert(error.message);
-            return window.location.reload();
-        }
-    }
-    return (
-        <ScrollArea className="h-70 px-2">
-            <ol className="h-auto px-2">
-                {elementArray?.map((val, index) => {
-                    return (
-                        <li key={index}>
-                            <div className="text-sm w-full flex justify-between">
-                                {val.room}
-                                <div className="flex gap-2">
-                                    <HoverCard>
-                                        <HoverCardTrigger asChild>
-                                            <Link href={`./classrooms/${val.room}`}>
-                                                <Button>
-                                                    <CalendarCog />
-                                                </Button>
-                                            </Link>
-                                        </HoverCardTrigger>
-                                        <HoverCardContent className="w-40 p-2.5">
-                                            <p className="text-sm">View Schedule</p>
-                                        </HoverCardContent>
-                                    </HoverCard>
-                                    <HoverCard>
-                                        <HoverCardTrigger>
-                                            <Button variant="destructive" onClick={() => { handleDelete(val.room) }}>
-                                                <TrashIcon />
-                                            </Button>
-                                        </HoverCardTrigger>
-                                        <HoverCardContent className="w-40 p-2.5">
-                                            <p className="text-sm">Delete</p>
-                                        </HoverCardContent>
-                                    </HoverCard>
+"use client";
+import { Fragment } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionItem } from "@/components/ui/accordion";
 
-                                </div>
-                            </div>
-                            <Separator className="my-2" />
-                        </li>
-                    )
-                })}
-            </ol>
+import deleteClassroom from "@/utils/deleteClassroom";
+import ClassroomItem from "./ClassroomItem"; // new component
+
+export default function ScrollContent({ elementArray = [] }) {
+    const handleDelete = async (room) => {
+        const res = await deleteClassroom(room);
+        if (res.success) {
+            alert(`Classroom "${room}" deleted successfully.`);
+        } else {
+            alert(`Problem deleting classroom "${room}".`);
+        }
+        window.location.reload();
+    };
+
+    return (
+        <ScrollArea className="h-[70vh] px-2">
+            {elementArray.length === 0 ? (
+                <p className="text-center text-muted-foreground text-sm py-4">
+                    No entries found.
+                </p>
+            ) : (
+                <ol className="space-y-2">
+                    {elementArray.map((val, index) => (
+                        <Fragment key={val.room || index}>
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value={`item-${index}`}>
+                                    <ClassroomItem val={val} handleDelete={handleDelete} />
+                                </AccordionItem>
+                            </Accordion>
+                            <Separator />
+                        </Fragment>
+                    ))}
+                </ol>
+            )}
         </ScrollArea>
     );
 }

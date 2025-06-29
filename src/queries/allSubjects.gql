@@ -3,5 +3,9 @@ query GetAllSubjects{
         code
         name
         type
+        teachers {
+          name
+          code
+        }
     }
 }

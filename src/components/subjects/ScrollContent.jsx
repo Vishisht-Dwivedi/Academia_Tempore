@@ -1,48 +1,74 @@
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { TrashIcon } from "lucide-react"
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card"
-import { Separator } from "@/components/ui/separator"
-import deleteSubject from "@/utils/deleteSubject"
-export default function ScrollContent({ elementArray }) {
+import { Fragment } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+    Accordion,
+    AccordionItem,
+    AccordionTrigger,
+    AccordionContent,
+} from "@/components/ui/accordion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { TrashIcon } from "lucide-react";
+import deleteSubject from "@/utils/deleteSubject";
+
+export default function ScrollContent({ elementArray = [] }) {
     const handleDelete = async (code, type) => {
         try {
             const res = await deleteSubject(code, type);
             alert(res);
-            return window.location.reload();
         } catch (error) {
             alert(error.message);
-            return window.location.reload();
+        } finally {
+            window.location.reload();
         }
+    };
 
-    }
     return (
-        <ScrollArea className="h-70 px-2">
-            <ol className="h-auto px-2">
-                {elementArray?.map((val, index) => {
-                    return (
-                        <li key={index}>
-                            <div className="text-sm w-full flex justify-between">
-                                <p>{val.name} <br /> {val.type} </p>
-                                <div className="flex gap-2">
-                                    <HoverCard>
-                                        <HoverCardTrigger>
-                                            <Button variant="destructive" onClick={() => { handleDelete(val.code, val.type) }}>
-                                                <TrashIcon />
-                                            </Button>
-                                        </HoverCardTrigger>
-                                        <HoverCardContent className="w-40 p-2.5">
-                                            <p className="text-sm">Delete</p>
-                                        </HoverCardContent>
-                                    </HoverCard>
+        <ScrollArea className="h-[70vh] px-2">
+            {elementArray.length === 0 ? (
+                <p className="text-center text-muted-foreground text-sm py-4">
+                    No entries found.
+                </p>
+            ) : (
+                <ol className="space-y-2">
+                    {elementArray.map((val, index) => (
+                        <Fragment key={`${val.code}-${val.type}` || index}>
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value={`item-${index}`}>
+                                    {/* Header */}
+                                    <div className="flex justify-between items-center px-3 py-1 rounded-md">
+                                        <AccordionTrigger className="flex-1 text-left items-center justify-center">
+                                            <span className="text-sm font-medium">{val.name} ({val.type})</span>
+                                        </AccordionTrigger>
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => handleDelete(val.code, val.type)}
+                                        >
+                                            <TrashIcon className="h-6 w-6" />
+                                        </Button>
+                                    </div>
 
-                                </div>
-                            </div>
-                            <Separator className="my-2" />
-                        </li>
-                    )
-                })}
-            </ol>
+                                    {/* Accordion Content (optional for future use) */}
+                                    <AccordionContent className="px-3 pb-2 text-sm space-y-1 text-muted-foreground">
+                                        <p className="text-xs italic">
+                                            Code: {val.code}
+                                        </p>
+                                        <div className="flex flex-col flex-wrap gap-1 text-xs text-muted-foreground">
+                                            {val.teachers.map((teacher, idx) => (
+                                                <span key={idx}>
+                                                    <Link href={`/dashboard/teachers/${teacher.code}`} className="underline underline-offset-2">{teacher.name}</Link>
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                            <Separator />
+                        </Fragment>
+                    ))}
+                </ol>
+            )}
         </ScrollArea>
     );
 }
