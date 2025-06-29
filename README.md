@@ -71,185 +71,195 @@ All critical operations (create, update, delete) use Mongoose session-based **tr
 
 ```
 ## 📁 Project Structure
-
-```bash
 Academia Tempore
-├── server
-│   ├── constructors
-│   │   ├── classroomConstructor.js
-│   │   ├── scheduleConstructor.js
-│   │   ├── slotConstructor.js
-│   │   ├── subjectConstructor.js
-│   │   ├── teacherConstructor.js
-│   │   └── utils
-│   │       ├── capitalizeString.js
-│   │       └── normalizeString.js
-│   ├── graphql
-│   │   ├── inputs
-│   │   │   ├── DayScheduleInputType.js
-│   │   │   ├── RemoveSlotInputType.js
-│   │   │   ├── ScheduleInputType.js
-│   │   │   ├── SlotInputNestedType.js
-│   │   │   └── SlotInputType.js
-│   │   ├── schema.js
-│   │   └── types
-│   │       ├── Classroom.js
-│   │       ├── Schedule.js
-│   │       ├── Subject.js
-│   │       └── Teacher.js
-│   ├── index.js
-│   ├── models
-│   │   ├── Classrooms.js
-│   │   ├── Schedule.js
-│   │   ├── Subjects.js
-│   │   └── Teachers.js
-│   ├── registerModels.js
-│   ├── seeds
-│   │   ├── classroom_schedule.js
-│   │   ├── seeds.js
-│   │   ├── subjects.js
-│   │   └── teachers.js
-│   ├── services
-│   │   ├── classroom
-│   │   │   ├── create.js
-│   │   │   ├── delete.js
-│   │   │   ├── read.js
-│   │   │   └── utils
-│   │   │       ├── injectRoomId.js
-│   │   │       ├── stripRoomId.js
-│   │   │       └── verifyAndLinkClassroom.js
-│   │   ├── schedule
-│   │   │   ├── create.js
-│   │   │   ├── delete.js
-│   │   │   ├── slot
-│   │   │   │   └── create.js
-│   │   │   ├── update.js
-│   │   │   └── utils
-│   │   │       ├── handleScheduleSlotUpdate.js
-│   │   │       ├── insertNewSlot.js
-│   │   │       └── updateExistingSlot.js
-│   │   ├── subject
-│   │   │   ├── create.js
-│   │   │   ├── delete.js
-│   │   │   └── read.js
-│   │   ├── teacher
-│   │   │   ├── create.js
-│   │   │   ├── delete.js
-│   │   │   ├── read.js
-│   │   │   └── utils
-│   │   │       └── getTeacherSchedule.js
-│   │   └── utils
-│   │       ├── backlink
-│   │       │   └── addBacklink.js
-│   │       ├── collisionDetection
-│   │       │   ├── isClassroomFree.js
-│   │       │   └── isTeacherFree.js
-│   │       └── objToID
-│   │           ├── subjectToID.js
-│   │           └── teacherToID.js
-│   └── test.js
-├── client
-│   ├── README.md
-│   ├── components.json
-│   ├── eslint.config.mjs
-│   ├── jsconfig.json
-│   ├── next.config.mjs
-│   ├── package.json
-│   ├── postcss.config.mjs
-│   ├── public
-│   │   ├── file.svg
-│   │   ├── globe.svg
-│   │   ├── next.svg
-│   │   ├── vercel.svg
-│   │   └── window.svg
-│   └── src
-│       ├── app
-│       │   ├── dashboard
-│       │   │   ├── classrooms
-│       │   │   │   ├── [roomCode]
-│       │   │   │   │   └── page.jsx
-│       │   │   │   └── page.jsx
-│       │   │   ├── layout.jsx
-│       │   │   ├── page.jsx
-│       │   │   ├── subjects
-│       │   │   │   └── page.jsx
-│       │   │   └── teachers
-│       │   │       ├── [teacherCode]
-│       │   │       │   └── page.jsx
-│       │   │       └── page.jsx
-│       │   ├── favicon.ico
-│       │   ├── globals.css
-│       │   ├── layout.js
-│       │   └── page.js
-│       ├── components
-│       │   ├── app-sidebar.jsx
-│       │   ├── classrooms
-│       │   │   ├── AddCard.jsx
-│       │   │   ├── AllClassrooms.jsx
-│       │   │   └── ScrollContent.jsx
-│       │   ├── schedule
-│       │   │   ├── PlotSchedule.jsx
-│       │   │   ├── ScheduleGrid.jsx
-│       │   │   ├── ScheduleHeaderRow.jsx
-│       │   │   ├── ScheduleSlotCell.jsx
-│       │   │   └── utils.js
-│       │   ├── search-form.jsx
-│       │   ├── subjects
-│       │   │   ├── AddCard.jsx
-│       │   │   ├── AllSubjects.jsx
-│       │   │   └── ScrollContent.jsx
-│       │   ├── teachers
-│       │   │   ├── AddCard.jsx
-│       │   │   ├── AllTeachers.jsx
-│       │   │   └── ScrollContent.jsx
-│       │   └── ui
-│       ├── constructors
-│       │   ├── Schedule
-│       │   │   └── slot.js
-│       │   ├── finalConstructors
-│       │   │   ├── classroomConstructor.js
-│       │   │   ├── scheduleConstructor.js
-│       │   │   ├── slotConstructor.js
-│       │   │   ├── subjectConstructor.js
-│       │   │   └── teacherConstructor.js
-│       │   └── utils
-│       │       ├── capitalizeString.js
-│       │       └── normalizeString.js
-│       ├── hooks
-│       │   └── use-mobile.js
-│       ├── lib
-│       │   ├── graphqlClient.js
-│       │   └── utils.js
-│       ├── queries
-│       │   ├── allClassrooms.gql
-│       │   ├── allSubjects.gql
-│       │   ├── allTeachers.graphql
-│       │   ├── classroomSchedule.gql
-│       │   ├── createClassroomByRoom.gql
-│       │   ├── createSubject.gql
-│       │   ├── createTeacher.gql
-│       │   ├── deleteClassroom.gql
-│       │   ├── deleteSubject.gql
-│       │   ├── deleteTeacher.gql
-│       │   ├── removeSlot.gql
-│       │   ├── teacherSchedule.gql
-│       │   └── updateSchedule.gql
-│       ├── stores
-│       │   └── useScheduleStore.js
-│       └── utils
-│           ├── createClassroomByRoom.js
-│           ├── createSubject.js
-│           ├── createTeacher.js
-│           ├── deleteClassroom.js
-│           ├── deleteSubject.js
-│           ├── deleteTeacher.js
-│           ├── getAllClassrooms.js
-│           ├── getAllSubjects.js
-│           ├── getAllTeachers.js
-│           ├── getClasssroomSchedule.js
-│           ├── getTeacherSchedule.js
-│           ├── removeSlot.js
-│           └── updateSchedule.js
+.
+|-- README.md
+|-- components.json
+|-- eslint.config.mjs
+|-- jsconfig.json
+|-- next.config.mjs
+|-- package.json
+|-- pnpm-lock.yaml
+|-- postcss.config.cjs
+|-- public
+|   |-- file.svg
+|   |-- globe.svg
+|   |-- next.svg
+|   |-- vercel.svg
+|   -- window.svg
+|-- server
+|   |-- constructors
+|   |   |-- classroomConstructor.js
+|   |   |-- scheduleConstructor.js
+|   |   |-- slotConstructor.js
+|   |   |-- subjectConstructor.js
+|   |   |-- teacherConstructor.js
+|   |   -- utils
+|   |       |-- capitalizeString.js
+|   |       -- normalizeString.js
+|   |-- graphql
+|   |   |-- inputs
+|   |   |   |-- DayScheduleInputType.js
+|   |   |   |-- RemoveSlotInputType.js
+|   |   |   |-- ScheduleInputType.js
+|   |   |   |-- SlotInputNestedType.js
+|   |   |   -- SlotInputType.js
+|   |   |-- schema.js
+|   |   -- types
+|   |       |-- Classroom.js
+|   |       |-- Schedule.js
+|   |       |-- Subject.js
+|   |       -- Teacher.js
+|   |-- index.js
+|   |-- models
+|   |   |-- Classrooms.js
+|   |   |-- Schedule.js
+|   |   |-- Subjects.js
+|   |   -- Teachers.js
+|   |-- registerModels.js
+|   |-- services
+|   |   |-- classroom
+|   |   |   |-- create.js
+|   |   |   |-- delete.js
+|   |   |   |-- read.js
+|   |   |   -- utils
+|   |   |       |-- injectRoomId.js
+|   |   |       |-- stripRoomId.js
+|   |   |       -- verifyAndLinkClassroom.js
+|   |   |-- schedule
+|   |   |   |-- create.js
+|   |   |   |-- delete.js
+|   |   |   |-- slot
+|   |   |   |   -- create.js
+|   |   |   |-- update.js
+|   |   |   -- utils
+|   |   |       |-- handleScheduleSlotUpdate.js
+|   |   |       |-- insertNewSlot.js
+|   |   |       -- updateExistingSlot.js
+|   |   |-- subject
+|   |   |   |-- create.js
+|   |   |   |-- delete.js
+|   |   |   -- read.js
+|   |   |-- teacher
+|   |   |   |-- create.js
+|   |   |   |-- delete.js
+|   |   |   |-- read.js
+|   |   |   -- utils
+|   |   |       -- getTeacherSchedule.js
+|   |   -- utils
+|   |       |-- backlink
+|   |       |   -- addBacklink.js
+|   |       |-- collisionDetection
+|   |       |   |-- isClassroomFree.js
+|   |       |   -- isTeacherFree.js
+|   |       -- objToID
+|   |           |-- subjectToID.js
+|   |           -- teacherToID.js
+|   -- test.js
+|-- src
+|   |-- app
+|   |   |-- dashboard
+|   |   |   |-- classrooms
+|   |   |   |   |-- [roomCode]
+|   |   |   |   |   -- page.jsx
+|   |   |   |   -- page.jsx
+|   |   |   |-- layout.jsx
+|   |   |   |-- page.jsx
+|   |   |   |-- subjects
+|   |   |   |   -- page.jsx
+|   |   |   -- teachers
+|   |   |       |-- [teacherCode]
+|   |   |       |   -- page.jsx
+|   |   |       -- page.jsx
+|   |   |-- favicon.ico
+|   |   |-- globals.css
+|   |   |-- layout.js
+|   |   -- page.js
+|   |-- components
+|   |   |-- app-sidebar.jsx
+|   |   |-- classrooms
+|   |   |   |-- AddCard.jsx
+|   |   |   |-- AllClassrooms.jsx
+|   |   |   -- ScrollContent.jsx
+|   |   |-- schedule
+|   |   |   |-- PlotSchedule.jsx
+|   |   |   |-- ScheduleGrid.jsx
+|   |   |   |-- ScheduleHeaderRow.jsx
+|   |   |   |-- ScheduleSlotCell.jsx
+|   |   |   -- utils.js
+|   |   |-- search-form.jsx
+|   |   |-- subjects
+|   |   |   |-- AddCard.jsx
+|   |   |   |-- AllSubjects.jsx
+|   |   |   -- ScrollContent.jsx
+|   |   |-- teachers
+|   |   |   |-- AddCard.jsx
+|   |   |   |-- AllTeachers.jsx
+|   |   |   -- ScrollContent.jsx
+|   |   -- ui
+|   |       |-- breadcrumb.jsx
+|   |       |-- button.jsx
+|   |       |-- card.jsx
+|   |       |-- collapsible.jsx
+|   |       |-- dialog.jsx
+|   |       |-- hover-card.jsx
+|   |       |-- input.jsx
+|   |       |-- label.jsx
+|   |       |-- scroll-area.jsx
+|   |       |-- separator.jsx
+|   |       |-- sheet.jsx
+|   |       |-- sidebar.jsx
+|   |       |-- skeleton.jsx
+|   |       |-- spinner.jsx
+|   |       -- tooltip.jsx
+|   |-- constructors
+|   |   |-- Schedule
+|   |   |   -- slot.js
+|   |   |-- finalConstructors
+|   |   |   |-- classroomConstructor.js
+|   |   |   |-- scheduleConstructor.js
+|   |   |   |-- slotConstructor.js
+|   |   |   |-- subjectConstructor.js
+|   |   |   -- teacherConstructor.js
+|   |   -- utils
+|   |       |-- capitalizeString.js
+|   |       -- normalizeString.js
+|   |-- hooks
+|   |   -- use-mobile.js
+|   |-- lib
+|   |   |-- graphqlClient.js
+|   |   -- utils.js
+|   |-- queries
+|   |   |-- allClassrooms.gql
+|   |   |-- allSubjects.gql
+|   |   |-- allTeachers.graphql
+|   |   |-- classroomSchedule.gql
+|   |   |-- createClassroomByRoom.gql
+|   |   |-- createSubject.gql
+|   |   |-- createTeacher.gql
+|   |   |-- deleteClassroom.gql
+|   |   |-- deleteSubject.gql
+|   |   |-- deleteTeacher.gql
+|   |   |-- removeSlot.gql
+|   |   |-- teacherSchedule.gql
+|   |   -- updateSchedule.gql
+|   |-- stores
+|   |   -- useScheduleStore.js
+|   -- utils
+|       |-- createClassroomByRoom.js
+|       |-- createSubject.js
+|       |-- createTeacher.js
+|       |-- deleteClassroom.js
+|       |-- deleteSubject.js
+|       |-- deleteTeacher.js
+|       |-- getAllClassrooms.js
+|       |-- getAllSubjects.js
+|       |-- getAllTeachers.js
+|       |-- getClasssroomSchedule.js
+|       |-- getTeacherSchedule.js
+|       |-- removeSlot.js
+|       -- updateSchedule.js
+-- tailwind.config.js
 ```
 
 ---
@@ -265,9 +275,7 @@ Academia Tempore
 
 ## 💡 Ongoing Work
 
-* ✨ GraphQL integration for real-time schedule building
 * ✨ WebSocket-based notification system
-* ✨ Frontend planner (React with Next.JS)
 * ✨ Constraint optimization engine for auto-generation
 
 ---
@@ -278,7 +286,7 @@ Academia Tempore
 > Over 100 developers have cloned this project—that’s unreal.
 Whether you’re exploring, learning, or building something on top of it—thank you.
 Feel free to open issues, ask questions, or just say hi. I’d love to hear how you’re using it. 🙌
-> The project is under development, I'll work on the constraint optimization engine once the basic dashboard is built and implemented.
+> The project is under development, I'll work on the constraint optimization engine once dashboard is live.
 > ❤️ Cloning this repo? Consider giving it a ⭐ — it means a lot!
 
 ## 🧾 License
