@@ -14,7 +14,7 @@ export default class Teacher {
      * @param {string} name - The full name of the teacher. Will be capitalized.
      * @param {string} code - A unique identifier for the teacher. Will be normalized (lowercased, trimmed, etc.).
      */
-    constructor({ name, code }) {
+    constructor({ name, code, email, password_hash }) {
         if (!name || !code) throw new Error("Teacher must have a name and code");
 
         /**
@@ -28,5 +28,7 @@ export default class Teacher {
          * @description Normalized code used to uniquely identify the teacher.
          */
         this.code = normalizeString(code);
+        this.email = email;
+        this.password_hash = password_hash
     }
 }
