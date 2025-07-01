@@ -274,8 +274,8 @@ Academia Tempore
 ---
 
 ## 💡 Ongoing Work
-
-* ✨ WebSocket-based notification system
+* ✨ Authentication and Authorization
+* ✨ WebHook-based notification system
 * ✨ Constraint optimization engine for auto-generation
 
 ---
