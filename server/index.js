@@ -1,13 +1,16 @@
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
-import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import compression from "compression";
+import cookie from "cookie";
 import next from "next";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5";
 import schema from "./graphql/schema.js";
 import "./registerModels.js";
+import { adminController } from "./controllers/admin.js";
+import { teacherController } from "./controllers/teacher.js";
+import readPayload from "./services/auth/readPayload.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
@@ -41,17 +44,35 @@ nextApp.prepare().then(async () => {
     server.use(
         "/graphql",
         expressMiddleware(apolloServer, {
-            context: async ({ req, res }) => ({ req, res }),
+            context: async ({ req, res }) => {
+                const cookies = req.headers.cookie
+                    ? cookie.parse(req.headers.cookie)
+                    : {};
+                const token = cookies.user;
+
+                if (!token) {
+                    res.writeHead(302, { Location: "/" });
+                    res.end();
+                    return {};
+                }
+
+                try {
+                    const user = readPayload(token);
+                    if (!user) throw new Error("Invalid token");
+
+                    return { req, res, user };
+                } catch (err) {
+                    console.warn("Invalid or expired token:", err.message);
+                    res.writeHead(302, { Location: "/" });
+                    res.end();
+                    return {};
+                }
+            },
         })
     );
-
     // Reserved route — NOT handled by Next.js
-    server.post("/login", async (req, res) => {
-        console.log("Login route hit", req.body);
-        const hashedPass = await bcrypt.hash(req.body.password, 12);
-        console.log(hashedPass);
-        res.redirect("/dashboard");
-    });
+    server.post("/login/admin", adminController);
+    server.post("/login/teacher", teacherController);
 
     // Catch-all — handled by Next.js
     server.use((req, res) => {

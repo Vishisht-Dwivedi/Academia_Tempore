@@ -1,3 +1,5 @@
+'use client';
+import { useParams } from 'next/navigation';
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,6 +16,8 @@ export function LoginForm({
   className,
   ...props
 }) {
+  const params = useParams();
+  const { type } = params;
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,7 +28,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action="/login" method="POST">
+          <form action={`/login/${type}`} method="POST">
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>

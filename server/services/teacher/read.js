@@ -1,6 +1,6 @@
 import TeacherModel from "../../models/Teachers.js";
 import getTeacherSchedule from "./utils/getTeacherSchedule.js";
-
+import bcrypt from "bcrypt"
 export const getTeacherByCode = async (code) => {
     const teacher = await TeacherModel.findOne({ code }).lean();
 
@@ -32,5 +32,13 @@ export const getTeacherByName = async (name) => {
         throw new Error(`Teacher with name : ${name} not found`);
     }
     return teacher;
+}
+
+export const getTeacherAuth = async (email, password) => {
+    const teacher = await TeacherModel.findOne({ email });
+    if (!teacher) return { user: false };
+    const verified = await bcrypt.compare(password, teacher.password_hash);
+    if (!verified) return { user: false };
+    return { user: teacher.name, email: teacher.email }
 }
 export { getTeacherSchedule };
