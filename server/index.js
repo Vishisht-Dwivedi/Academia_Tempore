@@ -73,6 +73,36 @@ nextApp.prepare().then(async () => {
     // Reserved route — NOT handled by Next.js
     server.post("/login/admin", adminController);
     server.post("/login/teacher", teacherController);
+    server.get("/api/me", (req, res) => {
+        const cookiesHeader = req.headers.cookie;
+        if (!cookiesHeader) {
+            return res.status(401).json({ user: null, message: "No cookie found" });
+        }
+
+        const cookies = cookie.parse(cookiesHeader);
+        const token = cookies.user;
+
+        if (!token) {
+            return res.status(401).json({ user: null, message: "Token not found" });
+        }
+
+        try {
+            const user = readPayload(token); // Safely verifies JWT
+            if (!user) throw new Error("Invalid payload");
+
+            // You can customize what to send back here
+            return res.status(200).json({
+                user: {
+                    name: user.user,
+                    email: user.email,
+                    role: user.authScope
+                },
+            });
+        } catch (err) {
+            console.warn("Failed to decode token in /api/me:", err.message);
+            return res.status(403).json({ user: null, message: "Invalid or expired token" });
+        }
+    });
 
     // Catch-all — handled by Next.js
     server.use((req, res) => {

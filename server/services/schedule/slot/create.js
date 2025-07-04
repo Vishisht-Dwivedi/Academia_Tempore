@@ -1,4 +1,4 @@
-import Slot from "../../../constructors/slotConstructor.js";
+import { slotInputSchema } from "../../../../lib/validations/slot.js";
 import teacherToID from "../../utils/objToID/teacherToID.js";
 import subjectToID from "../../utils/objToID/subjectToID.js";
 
@@ -8,30 +8,25 @@ import subjectToID from "../../utils/objToID/subjectToID.js";
  *
  * @async
  * @function createSlot
- * @param {Object} slotObj - An object representing a single schedule slot.
- * @param {number} slotObj.slot - The slot number (1–8).
- * @param {Object} slotObj.subject - Subject details.
- * @param {string} slotObj.subject.name - Subject name.
- * @param {string} slotObj.subject.code - Subject code.
- * @param {string} slotObj.subject.type - Subject type ("theory" or "lab").
- * @param {Object} slotObj.teacher - Teacher details.
- * @param {string} slotObj.teacher.name - Teacher name.
- * @param {string} slotObj.teacher.code - Teacher code.
- *
- * @returns {Promise<Object>} A slot object ready for MongoDB, with teacher and subject replaced by their ObjectIDs.
- *
+ * @param {Object} slotObj - A full nested slot object (with full teacher and subject inside).
+ * @returns {Promise<Object>} A slot object with teacher and subject replaced by their ObjectIDs.
  * @throws {Error} If validation or ID resolution fails.
  */
 export default async function createSlot(slotObj) {
-    const { slot, subject, teacher } = slotObj;
+    const parsed = slotInputSchema.safeParse(slotObj);
 
-    const validatedSlot = new Slot(slot, subject, teacher);
+    if (!parsed.success) {
+        throw new Error(`Invalid slot: ${parsed.error.message}`);
+    }
 
-    const slotToSave = {
-        slot: validatedSlot.slot,
-        teacher: await teacherToID(validatedSlot.teacher),
-        subject: await subjectToID(validatedSlot.subject)
+    const { slot, teacher, subject } = parsed.data;
+
+    const teacherId = await teacherToID(teacher);
+    const subjectId = await subjectToID(subject);
+
+    return {
+        slot,
+        teacher: teacherId,
+        subject: subjectId,
     };
-
-    return slotToSave;
 }
