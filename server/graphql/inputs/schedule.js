@@ -1,8 +1,5 @@
-import {
-    GraphQLInputObjectType,
-    GraphQLList
-} from "graphql";
-import { SlotInputType } from "./SlotInputType.js";
+import { GraphQLInputObjectType, GraphQLList } from "graphql";
+import { SlotInputType } from "./slot.js";
 
 export const ScheduleInputType = new GraphQLInputObjectType({
     name: "ScheduleInput",
@@ -11,6 +8,6 @@ export const ScheduleInputType = new GraphQLInputObjectType({
         tuesday: { type: new GraphQLList(SlotInputType) },
         wednesday: { type: new GraphQLList(SlotInputType) },
         thursday: { type: new GraphQLList(SlotInputType) },
-        friday: { type: new GraphQLList(SlotInputType) }
-    }
+        friday: { type: new GraphQLList(SlotInputType) },
+    },
 });

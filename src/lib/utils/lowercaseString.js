@@ -1,0 +1,1 @@
+export const lowercaseString = str => str.toLowerCase().trim();

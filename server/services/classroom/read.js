@@ -1,50 +1,26 @@
 import ClassroomModel from "../../models/Classrooms.js";
-import SubjectModel from "../../models/Subjects.js";
-import TeacherModel from "../../models/Teachers.js";
-
-export const getClassroomByID = async (id) => {
-    const classroom = await ClassroomModel.findById(id).lean();
-    if (!classroom) throw new Error(`Classroom with ID ${id} not found`);
-    return classroom;
-};
-export const getClassroom = async (room) => {
-    const classroom = await ClassroomModel.findOne({ room });
-    if (!classroom) throw new Error(`Classroom ${room} not found`);
-    return classroom;
-}
-
-export const getClassroomSchedule = async (roomID) => {
-    const roomDoc = await ClassroomModel.findById(roomID).lean();
-    if (!roomDoc) throw new Error(`Classroom with id: ${roomID} not found`);
-
-    const schedule = {
-        monday: [],
-        tuesday: [],
-        wednesday: [],
-        thursday: [],
-        friday: []
-    };
-
-    for (const day of roomDoc.schedule) {
-        for (const slot of day.slots) {
-            const [subjectDoc, teacherDoc] = await Promise.all([
-                SubjectModel.findById(slot.subject).lean(),
-                TeacherModel.findById(slot.teacher).lean()
-            ]);
-
-            schedule[day.day].push({
-                slot: slot.slot,
-                subject: subjectDoc?.name || "Unknown Subject",
-                type: subjectDoc?.type || "unknown",
-                room: roomDoc.room,
-                teacher: teacherDoc?.name || "Unknown Teacher"
-            });
-        }
+/**
+ * Find a classroom by filter (room or _id)
+ * @param {Object} filter - { room } or { _id }
+ * @param {Object} options - { select, lean, includeSchedule }
+ */
+export async function findClassroom(filter) {
+    let query = ClassroomModel.findOne(filter).lean();
+    const classroom = await query;
+    if (!classroom) {
+        throw new Error(`Classroom not found for filter: ${JSON.stringify(filter)}`);
     }
+    return classroom;
 
-    return schedule;
-};
-export const getAllClassrooms = async () => {
-    const allClassrooms = await ClassroomModel.find({}).lean();
-    return allClassrooms;
+}
+/**
+ * Get all classrooms
+ */
+export async function getAllClassrooms() {
+    let query = await ClassroomModel.find({});
+    const roomArray = [];
+    for (const room of query) {
+        roomArray.push({ room: room.room, _id: room._id });
+    }
+    return roomArray;
 }

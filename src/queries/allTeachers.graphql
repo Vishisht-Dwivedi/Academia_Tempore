@@ -1,6 +1,7 @@
 query GetAllTeachers{
-    teachers {
+    allTeachers {
     name
+    email
     code
     subjects {
       name

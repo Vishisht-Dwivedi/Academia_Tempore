@@ -1,4 +1,4 @@
-import { getTeacherAuth } from "../services/teacher/read.js";
+import { authenticateTeacher } from "../services/teacher/read.js";
 import generatePayload from "../services/auth/generatePayload.js";
 
 export const teacherController = async (req, res) => {
@@ -9,7 +9,7 @@ export const teacherController = async (req, res) => {
     }
 
     try {
-        const teacherData = await getTeacherAuth(email, password);
+        const teacherData = await authenticateTeacher(email, password);
         if (!teacherData.user) {
             return res.redirect("/login/teacher");
         }

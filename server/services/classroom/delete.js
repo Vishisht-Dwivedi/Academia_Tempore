@@ -1,11 +1,11 @@
 import TeacherModel from "../../models/Teachers.js";
 import ClassroomModel from "../../models/Classrooms.js";
+import { classroomSchema } from "../../../lib/validations/classroom.js";
 
 export default async function deleteClassroom(roomCode) {
     try {
-
-        const validatedRooom = roomCode.toUpperCase().trim();
-        const room = await ClassroomModel.findOne({ room: validatedRooom }).lean();
+        const validatedRoom = classroomSchema.parse(roomCode);
+        const room = await ClassroomModel.findOne({ room: validatedRoom }).lean();
         if (!room) {
             throw new Error(`Room with code: ${roomCode} not found`);
         }

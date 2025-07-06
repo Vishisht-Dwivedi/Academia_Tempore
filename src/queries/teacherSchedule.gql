@@ -3,39 +3,74 @@ query GetTeacherSchedule($code: String!) {
     name
     schedule {
       monday {
-        slot 
-        subject
-        room
-        type
-        teacher
-      }
-      tuesday {
         slot
-        subject
+        subject {
+          name
+          code
+          type
+        }
+        teacher {
+          name
+          code
+          email
+        }
         room
-        type
-        teacher
-      } 
-      wednesday {
-        slot
-        subject
-        room
-        type
-        teacher
-      }
-      thursday {
-        slot
-        subject
-        room
-        type
-        teacher
       }
       friday {
         slot
-        subject
+        subject {
+          name
+          code
+          type
+        }
+        teacher {
+          name
+          code
+          email
+        }
         room
-        type
-        teacher
+      }
+      thursday {
+        slot
+        subject {
+          name
+          code
+          type
+        }
+        teacher {
+          name
+          code
+          email
+        }
+        room
+      }
+      tuesday {
+        slot
+        subject {
+          name
+          code
+          type
+        }
+        teacher {
+          name
+          code
+          email
+        }
+        room
+      }
+      wednesday {
+        slot
+        subject {
+          name
+          code
+          type
+        }
+        teacher {
+          name
+          code
+          email
+        }
+        room
       }
     }
   }
