@@ -4,15 +4,15 @@ import { classroomSchema } from "../../../lib/validations/classroom.js";
 
 export default async function deleteClassroom(roomCode) {
     try {
-        const validatedRoom = classroomSchema.parse(roomCode);
-        const room = await ClassroomModel.findOne({ room: validatedRoom }).lean();
-        if (!room) {
+        const { room } = classroomSchema.parse({ room: roomCode });
+        const roomDoc = await ClassroomModel.findOne({ room }).lean();
+        if (!roomDoc) {
             throw new Error(`Room with code: ${roomCode} not found`);
         }
 
         // gather all unique teacher IDs from the schedule
         const teacherSet = new Set();
-        for (const day of room.schedule) {
+        for (const day of roomDoc.schedule) {
             for (const slot of day.slots) {
                 if (slot.teacher) teacherSet.add(slot.teacher.toString());
             }
@@ -23,20 +23,20 @@ export default async function deleteClassroom(roomCode) {
         // remove classroom from all linked teachers
         await TeacherModel.updateMany(
             { _id: { $in: teacherIds } },
-            { $pull: { classes: room._id } }
+            { $pull: { classes: roomDoc._id } }
         );
 
         // Delete the classroom
-        await ClassroomModel.findByIdAndDelete(room._id);
+        await ClassroomModel.findByIdAndDelete(roomDoc._id);
 
         return {
             success: true,
-            message: `Classroom ${room.room} deleted and backlinks removed from ${teacherIds.length} teacher(s)`
+            message: `Classroom ${roomDoc.room} deleted and backlinks removed from ${teacherIds.length} teacher(s)`
         };
     } catch (error) {
         return {
             success: false,
             message: error.message
-        }
+        };
     }
 }

@@ -1,17 +1,13 @@
 // src/utils/createTeacher.js
 import { client } from "@/lib/graphqlClient";
+import { teacherSchema } from "@/lib/validations/teacher";
 import { CreateTeacher } from "@/queries/createTeacher.gql";
 
-export default async function createTeacher(name, code) {
-    if (!name || !code) throw new Error("Both name and code are required");
-
-    const trimmedName = name.trim();
-    const trimmedCode = code.trim().toLowerCase();
-
+export default async function createTeacher(teacher) {
+    const validated = teacherSchema.safeParse(teacher);
+    if (!validated.success) throw new Error(validated.error.message);
     const { createTeacher } = await client.request(CreateTeacher, {
-        name: trimmedName,
-        code: trimmedCode,
+        teacher: validated.data,
     });
-
     return createTeacher;
 }

@@ -1,14 +1,22 @@
-import { CreateClassroomByRoom } from "@/queries/createClassroomByRoom.gql";
+import { CreateClassroom } from "@/queries/createClassroomByRoom.gql";
 import { client } from "@/lib/graphqlClient";
+import { classroomSchema } from "@/lib/validations/classroom";
 
 export default async function createClassroomByRoom(room) {
-    if (!room) throw new Error("Room is required");
+    try {
 
-    const validatedRoom = room.trim().toUpperCase();
+        const validatedRoom = classroomSchema.safeParse({ room });
 
-    const { createClassroomByRoom } = await client.request(CreateClassroomByRoom, {
-        room: validatedRoom
-    });
+        if (!validatedRoom.success) {
+            throw new Error(`Error while parsing room: ${validatedRoom.error.message}`);
+        }
 
-    return createClassroomByRoom;
+        const { createClassroomByRoom } = await client.request(CreateClassroom, {
+            classroom: validatedRoom.data,
+        });
+
+        return { success: true, data: createClassroomByRoom };
+    } catch (error) {
+        return { success: false, error }
+    }
 }

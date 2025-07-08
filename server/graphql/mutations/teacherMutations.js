@@ -4,18 +4,7 @@ import { TeacherInputType } from "../inputs/teacher.js";
 import createTeacher from "../../services/teacher/create.js";
 import { updateTeacher } from "../../services/teacher/update.js";
 import deleteTeacher from "../../services/teacher/delete.js";
-
-// Reusable result type for deletions
-import { GraphQLObjectType } from "graphql";
-
-const DeleteResultType = new GraphQLObjectType({
-    name: "DeleteResult",
-    fields: () => ({
-        success: { type: GraphQLString },
-        message: { type: GraphQLString },
-    }),
-});
-
+import { DeleteResultType } from "../types/Delete.js";
 export const teacherMutation = {
     // Create teacher
     createTeacher: {
