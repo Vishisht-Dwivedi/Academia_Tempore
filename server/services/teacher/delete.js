@@ -1,45 +1,43 @@
-import ClassroomModel from "../../models/Classrooms.js";
 import TeacherModel from "../../models/Teachers.js";
+import ClassroomModel from "../../models/Classrooms.js";
 import SubjectModel from "../../models/Subjects.js";
 
+/**
+ * Deletes a teacher and removes all their references in classrooms and subjects.
+ * @param {string} teacherCode
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
 export default async function deleteTeacher(teacherCode) {
-    const validatedCode = teacherCode.toLowerCase().trim();
-    const teacher = await TeacherModel.findOne({ code: validatedCode });
+    const code = teacherCode.toUpperCase().trim();
+
+    const teacher = await TeacherModel.findOne({ code });
     if (!teacher) {
-        throw new Error(`Teacher with id: ${teacherCode} not found`);
+        throw new Error(`Teacher with code "${teacherCode}" not found.`);
     }
 
-    // Remove teacher from all linked classrooms
-    for (const roomId of teacher.classes) {
-        const roomDoc = await ClassroomModel.findById(roomId);
-        if (!roomDoc) continue;
+    const teacherId = teacher._id;
 
-        let updated = false;
-
-        for (const day of roomDoc.schedule) {
-            const newSlots = day.slots.filter(slot => slot.teacher.toString() !== teacher._id.toString());
-            if (newSlots.length !== day.slots.length) {
-                day.slots = newSlots;
-                updated = true;
+    // 1. Remove teacher from classrooms
+    const classroomUpdates = await ClassroomModel.updateMany(
+        { "schedule.slots.teacher": teacherId },
+        {
+            $pull: {
+                "schedule.$[].slots": { teacher: teacherId }
             }
         }
-
-        if (updated) {
-            await roomDoc.save();
-        }
-    }
-
-    // Remove teacher from all linked subjects
-    await SubjectModel.updateMany(
-        { teachers: teacher._id },
-        { $pull: { teachers: teacher._id } }
     );
 
-    // Delete teacher document
-    await TeacherModel.findByIdAndDelete(teacher._id);
+    // 2. Remove teacher from subjects
+    const subjectUpdates = await SubjectModel.updateMany(
+        { teachers: teacherId },
+        { $pull: { teachers: teacherId } }
+    );
+
+    // 3. Delete teacher document
+    await TeacherModel.findByIdAndDelete(teacherId);
 
     return {
         success: true,
-        message: `Teacher "${teacher.name}" deleted and removed from all classes and subjects.`
+        message: `Teacher "${teacher.name}" deleted from DB. Removed from ${classroomUpdates.modifiedCount} classrooms and ${subjectUpdates.modifiedCount} subjects.`,
     };
 }

@@ -40,7 +40,6 @@ export default function TeacherSchedule() {
         console.log("Publishing...", stagingSchedule);
         const res = await updateSchedule(stagingSchedule);
         alert(res);
-        return window.location.reload();
     };
 
     const hasUnsavedChanges =

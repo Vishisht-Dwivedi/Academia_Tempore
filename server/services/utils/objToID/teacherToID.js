@@ -1,34 +1,27 @@
 import TeacherModel from "../../../models/Teachers.js";
-import Teacher from "../../../constructors/teacherConstructor.js";
+import { teacherSchema } from "../../../../lib/validations/teacher.js";
 import createTeacher from "../../teacher/create.js";
-/**
- * Retrieves the `_id` of a teacher from the database using the provided teacher details.
- * If the teacher does not exist, it creates a new entry and then returns the `_id`.
- *
- * @async
- * @function teacherToID
- * @param {Object} teacher - An object representing the teacher.
- * @param {string} teacher.name - The full name of the teacher.
- * @param {string} teacher.code - The unique code identifying the teacher.
- *
- * @returns {Promise<string>} The MongoDB ObjectId (`_id`) of the existing or newly created teacher.
- *
- * @throws {Error} If teacher creation fails or input is invalid.
- */
 
+/**
+ * Resolves or creates a Teacher document and returns its MongoDB ObjectId.
+ */
 export default async function teacherToID(teacher) {
-    const validatedTeacher = new Teacher(teacher);
-    try {
-        let TeacherDoc = await TeacherModel.findOne({ code: validatedTeacher.code });
-        if (!TeacherDoc) {
-            const createdTeacher = await createTeacher(validatedTeacher);
-            if (!createdTeacher.success) {
-                throw new Error(`Failed to create teacher with code: ${teacher.code}`);
-            }
-            TeacherDoc = createdTeacher.data;
-        }
-        return TeacherDoc._id;
-    } catch (error) {
-        throw Error(error.message);
+    const parsed = teacherSchema.safeParse(teacher);
+    if (!parsed.success) {
+        throw new Error(`Invalid teacher: ${parsed.error.message}`);
     }
+
+    const data = parsed.data;
+
+    let teacherDoc = await TeacherModel.findOne({ code: data.code });
+
+    if (!teacherDoc) {
+        const created = await createTeacher(data);
+        if (!created.success) {
+            throw new Error(`Failed to create teacher with code: ${data.code}`);
+        }
+        teacherDoc = created.data;
+    }
+
+    return teacherDoc._id;
 }

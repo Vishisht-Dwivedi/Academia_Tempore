@@ -1,24 +1,23 @@
-// data im expecting
-// {
-//   "monday": [
-//     {
-//       "slot": 5,
-//       "subject": "Software Engineering",
-//       "type": "theory",
-//       "room": "TC-104",
-//       "teacher": "Dr. Rekha Kaushik"
-//     }
-//   ],
-// }
 import { handleScheduleSlotUpdate } from "./utils/handleScheduleSlotUpdate.js";
+import { scheduleSchema } from "../../../lib/validations/schedule.js";
 
+/**
+ * Updates classroom schedule based on fully nested validated data
+ */
 export const updateSchedule = async (updatedSchedule) => {
-    const weekDays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
-    for (const day of weekDays) {
-        if (!updatedSchedule[day]) continue;
+    const parsed = scheduleSchema.safeParse(updatedSchedule);
 
-        for (const slot of updatedSchedule[day]) {
+    if (!parsed.success) {
+        throw new Error(`Invalid schedule input: ${parsed.error.message}`);
+    }
+
+    const schedule = parsed.data;
+    const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+    for (const day of days) {
+        if (!schedule[day]) continue;
+        for (const slot of schedule[day]) {
             await handleScheduleSlotUpdate(day, slot);
         }
     }

@@ -6,6 +6,7 @@ import ScrollContent from "./ScrollContent"
 import { Spinner } from "@/components/ui/spinner"
 import { useRef, useState } from "react"
 export default function AllTeachersCard({ elementArray, state }) {
+    console.log(elementArray);
     const [inputTeacher, setInputTeacher] = useState('');
     const throttleTracker = useRef(Date.now());
     const handleInput = (e) => {

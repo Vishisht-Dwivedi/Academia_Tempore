@@ -1,10 +1,11 @@
 query GetAllSubjects{
-    subjects {
+    allSubjects {
         code
         name
         type
         teachers {
           name
+          email
           code
         }
     }

@@ -1,96 +1,41 @@
-import Classrooms from "../../constructors/classroomConstructor.js";
-import createSchedule from "../schedule/create.js";
 import mongoose from "mongoose";
 import ClassroomModel from "../../models/Classrooms.js";
-import verifyAndLink from "./utils/verifyAndLinkClassroom.js";
-import injectRoomId from "./utils/injectRoomId.js";
-import stripRoomId from "./utils/stripRoomId.js";
+import { classroomSchema } from "../../../lib/validations/classroom.js";
 
 /**
- * Creates a classroom document in the database after validating structure and schedule,
- * resolving all referenced teacher and subject ObjectIDs, and preventing duplicates.
+ * Creates a classroom document with validated schedule and resolved ObjectIDs.
  *
- * @async
- * @function createClassroom
- * @param {string} room - The name/code of the classroom (e.g., "TC-105").
- * @param {Array<{day: string, slots: Array<Object>}>} schedule - An array of day-wise schedule objects,
- *     where each contains the day and an array of slots.
- *     Each slot must include:
- *     - `slot`: number (1–9),
- *     - `subject`: { name, code, type },
- *     - `teacher`: { name, code }
- *
+ * @param {string} room - The classroom identifier (e.g., "TC-105").
+ * @param {Array<Object>} schedule - Array of daily schedules with nested slots.
  * @returns {Promise<{ success: boolean, data?: Object, error?: string }>}
  */
-export const createClassroom = async (room, schedule) => {
-    const validatedClassroom = new Classrooms(room, schedule);
+export const createClassroom = async (room) => {
+    let validated;
     let session;
 
     try {
-        const scheduleToSave = await Promise.all(
-            validatedClassroom.schedule.map((daySchedule) =>
-                createSchedule(daySchedule)
-            )
-        );
+        const parsed = classroomSchema.safeParse({ room });
+        if (!parsed.success) throw new Error(parsed.error.message);
+
+        validated = parsed.data;
 
         session = await mongoose.startSession();
         session.startTransaction();
 
-        const existingRoom = await ClassroomModel.findOne({ room: validatedClassroom.room }).session(session);
-        if (existingRoom) {
-            throw new Error(`Room "${room}" already exists`);
-        }
+        const existingRoom = await ClassroomModel.findOne({ room: validated.room }).session(session);
+        if (existingRoom) throw new Error(`Room "${validated.room}" already exists`);
 
         const classroomDoc = new ClassroomModel({
-            room: validatedClassroom.room,
-            schedule: scheduleToSave,
+            room: validated.room
         });
 
         const savedDoc = await classroomDoc.save({ session });
-
-        const scheduleWithRoom = injectRoomId(scheduleToSave, savedDoc._id);
-
-        await verifyAndLink(scheduleWithRoom);
-
         await session.commitTransaction();
-
-        return {
-            success: true,
-            data: savedDoc,
-        };
+        return { success: true, data: savedDoc };
     } catch (error) {
-        if (session) {
-            await session.abortTransaction();
-        }
-
-        console.error("Error in createClassroom:", error);
-        return {
-            success: false,
-            error: error.message || "Unknown error occurred during classroom creation",
-        };
+        if (session) await session.abortTransaction();
+        return { success: false, error: error.message || "Unknown error during classroom creation" };
     } finally {
         if (session) session.endSession();
     }
-}
-
-export const createClassroomByRoom = async (room) => {
-    const validatedRoom = room.trim().toUpperCase();
-    try {
-        const existingRoom = await ClassroomModel.findOne({ room });
-        if (existingRoom) throw new Error(`Room with code: ${room} already exists`);
-        const roomToSave = new ClassroomModel({
-            room: validatedRoom
-        })
-        const roomDoc = await roomToSave.save();
-        return {
-            success: true,
-            data: roomDoc
-        }
-    } catch (error) {
-        return {
-            success: false,
-            error
-        }
-    }
-
-}
+};

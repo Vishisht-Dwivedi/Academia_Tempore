@@ -7,9 +7,13 @@ import ScheduleSlotCell from './ScheduleSlotCell';
 import useScheduleStore from '@/stores/useScheduleStore';
 
 export default function ScheduleGrid() {
-    const { stagingSchedule } = useScheduleStore();
+    const { schedule, stagingSchedule } = useScheduleStore();
 
-    if (!stagingSchedule) return null;
+    // If either schedule is not loaded yet, don't render
+    if (!schedule?.schedule || !stagingSchedule) return null;
+
+    // Determine if we're in "room" view or "teacher" view
+    const viewMode = schedule.room ? 'room' : 'teacher';
 
     return (
         <div className="min-w-[700px] w-full bg-gray-200 rounded grid grid-cols-6 grid-rows-9 gap-0.5 p-0.5">
@@ -22,13 +26,20 @@ export default function ScheduleGrid() {
                         {time}
                     </div>
 
-                    {dayKeys.map((day) => (
-                        <ScheduleSlotCell
-                            key={`slot-${time}-${day}`}
-                            day={day}
-                            slotNumber={rowIndex + 1}
-                        />
-                    ))}
+                    {dayKeys.map((day) => {
+                        const slot = stagingSchedule?.[day]?.find(
+                            (s) => s?.slot === rowIndex + 1
+                        );
+                        return (
+                            <ScheduleSlotCell
+                                key={`slot-${time}-${day}`}
+                                day={day}
+                                slotNumber={rowIndex + 1}
+                                inputSlot={slot}
+                                roomOrTeacher={viewMode}
+                            />
+                        );
+                    })}
                 </React.Fragment>
             ))}
         </div>

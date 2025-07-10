@@ -1,3 +1,4 @@
+"use client";
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -14,6 +15,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -38,19 +40,16 @@ import {
 const navMain = [
   {
     title: "Teachers",
-    url: "#",
     icon: <GraduationCap className="mr-2 h-4 w-4" />,
     items: [{ title: "Manage", url: "/dashboard/teachers" }],
   },
   {
     title: "Classrooms",
-    url: "#",
     icon: <Building2 className="mr-2 h-4 w-4" />,
     items: [{ title: "Manage", url: "/dashboard/classrooms" }],
   },
   {
     title: "Subjects",
-    url: "#",
     icon: <BookOpen className="mr-2 h-4 w-4" />,
     items: [{ title: "Manage", url: "/dashboard/subjects" }],
   },
@@ -58,6 +57,22 @@ const navMain = [
 
 export const AppSidebar = React.memo(function AppSidebar(props) {
   const pathname = usePathname();
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await fetch("/api/me");
+        if (res.ok) {
+          const data = await res.json();
+          setUser({ name: data.user.name, role: data.user.role });
+        }
+      } catch (err) {
+        console.error("Failed to fetch user info:", err);
+      }
+    }
+    fetchUser();
+  }, []);
 
   return (
     <Sidebar
@@ -65,28 +80,21 @@ export const AppSidebar = React.memo(function AppSidebar(props) {
       className="h-screen sticky top-0 shadow-md border-r bg-white dark:bg-zinc-900"
     >
       <SidebarHeader className="px-4 pt-4 pb-2">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              asChild
-              className="border-b-2 border-fuchsia-400 mb-2"
-            >
-              <a href="/dashboard" className="flex items-center w-full">
-                <img src="/logo.png" alt="Academia Tempore" className="w-full" />
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <div className="text-sidebar-primary text-sm leading-snug font-medium text-center">
-              <a href="https://github.com/Vishisht-Dwivedi/">
-                <div className="flex justify-around items-center">
-                  <p>Built and Managed by <br /> Vishisht Dwivedi</p>
-                </div>
-              </a>
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <a href="/dashboard" className="flex items-center w-full">
+          <img src="/logo.png" alt="Academia Tempore" className="w-full" />
+        </a>
+        {user ? (
+          <div className="text-xs text-muted-foreground mt-2 px-1">
+            Logged in as <br />
+            <span className="font-semibold text-black dark:text-white">{user.name}</span>
+            <br />
+            <span className="text-[10px] uppercase tracking-wider text-fuchsia-600">{user.role}</span>
+          </div>
+        ) : (
+          <div className="text-xs text-muted-foreground mt-2 px-1 animate-pulse">
+            Fetching user...
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent className="px-2">
@@ -95,58 +103,78 @@ export const AppSidebar = React.memo(function AppSidebar(props) {
             Entities
           </h4>
           <SidebarMenu>
-            {navMain.map((section, index) => (
-              <Collapsible
-                key={section.title}
-                defaultOpen={index === 1}
-                className="group/collapsible"
-              >
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton className="hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors">
-                      {section.icon}
-                      {section.title}
-                      <Plus
-                        className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180"
-                        aria-hidden
-                      />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                </SidebarMenuItem>
+            {navMain.map((section) => {
+              const isActiveGroup = section.items.some(item => pathname === item.url);
 
-                {section.items?.length > 0 && (
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {section.items.map((item) => {
-                        const isActive = pathname === item.url;
-                        return (
-                          <SidebarMenuSubItem key={item.title}>
-                            <SidebarMenuSubButton
-                              asChild
-                              className={`text-sm transition-colors ${isActive
-                                ? "bg-fuchsia-100 text-fuchsia-700 font-semibold"
-                                : "hover:bg-muted"
-                                }`}
-                            >
-                              <a href={item.url}>{item.title}</a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        );
-                      })}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                )}
-              </Collapsible>
-            ))}
+              return (
+                <Collapsible
+                  key={section.title}
+                  defaultOpen={isActiveGroup}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuButton className="hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors w-full flex items-center">
+                        {section.icon}
+                        {section.title}
+                        <Plus
+                          className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-180"
+                          aria-hidden
+                        />
+                      </SidebarMenuButton>
+                    </CollapsibleTrigger>
+                  </SidebarMenuItem>
+
+                  {section.items?.length > 0 && (
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {section.items.map((item) => {
+                          const isActive = pathname === item.url;
+                          return (
+                            <SidebarMenuSubItem key={item.title}>
+                              <SidebarMenuSubButton
+                                asChild
+                                className={`text-sm transition-colors w-full ${isActive
+                                  ? "bg-fuchsia-100 text-fuchsia-700 font-semibold"
+                                  : "hover:bg-muted"
+                                  }`}
+                              >
+                                <a href={item.url}>{item.title}</a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  )}
+                </Collapsible>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <div className="text-sidebar-primary text-sm leading-snug font-medium text-center">
+              <a href="https://github.com/Vishisht-Dwivedi/" target="_blank" rel="noreferrer">
+                <div className="flex justify-around items-center">
+                  <p>
+                    Built and Managed by <br /> Vishisht Dwivedi
+                  </p>
+                </div>
+              </a>
+            </div>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
 
       <div className="mt-auto px-4 pb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="cursor-pointer">
-              <AvatarFallback>N</AvatarFallback>
+              <AvatarFallback>U</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-40">

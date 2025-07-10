@@ -11,19 +11,21 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import createTeacher from "@/utils/createTeacher";
-
+import { teacherSchema } from "@/lib/validations/teacher";
 export default function AddTeacherCard() {
     const [name, setName] = useState("");
     const [code, setCode] = useState("");
-
+    const [email, setEmail] = useState("");
     const handleSubmit = async () => {
-        if (!name || !code) {
-            alert("Both name and code are required.");
-            return;
+        const validated = teacherSchema.safeParse({ name, code, email });
+        if (!validated.success) {
+            alert(validated.error);
+            setName("");
+            setCode("");
+            setEmail("");
         }
-
         try {
-            const res = await createTeacher(name, code);
+            const res = await createTeacher({ name, code, email });
             if (res) {
                 alert(`Teacher: ${name} created successfully`);
                 return window.location.reload();
@@ -64,6 +66,16 @@ export default function AddTeacherCard() {
                                     placeholder="RC"
                                     value={code}
                                     onChange={(e) => setCode(e.target.value)}
+                                />
+                            </div>
+                            <div className="w-full flex flex-col gap-3">
+                                <Label htmlFor="AddEmail">Enter email</Label>
+                                <Input
+                                    id="AddEmail"
+                                    type="text"
+                                    placeholder="rc@iiitbhopal.ac.in"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
                         </div>

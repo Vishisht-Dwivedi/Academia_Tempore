@@ -1,7 +1,7 @@
-# src/queries/createTeacher.gql
-mutation CreateTeacher($name: String!, $code: String!) {
-  createTeacher(name: $name, code: $code) {
+mutation CreateTeacher($teacher: TeacherInput!) {
+  createTeacher(teacher: $teacher) {
     name
     code
+    email
   }
 }

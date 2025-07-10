@@ -1,23 +1,24 @@
-import { GraphQLObjectType, GraphQLString, GraphQLList, GraphQLError } from "graphql";
+import {
+    GraphQLObjectType,
+    GraphQLString,
+    GraphQLID,
+} from "graphql";
 import { ScheduleType } from "./Schedule.js";
-import { getClassroomSchedule } from "../../services/classroom/read.js";
+import getClassroomSchedule from "../../services/classroom/utils/getClassroomSchedule.js";
+
 export const ClassroomType = new GraphQLObjectType({
     name: "Classroom",
     fields: () => ({
+        _id: { type: GraphQLID },
         room: { type: GraphQLString },
         schedule: {
             type: ScheduleType,
             resolve: async (parent) => {
-                try {
+                if (parent._type === "Classroom") {
                     return await getClassroomSchedule(parent._id);
-                } catch (error) {
-                    throw new GraphQLError(`${error.message} for room: ${parent.room}`, {
-                        extensions: {
-                            code: "BAD_USER_INPUT",
-                        },
-                    });
                 }
+                return null;
             }
         }
     })
-})
+});

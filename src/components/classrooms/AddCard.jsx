@@ -9,11 +9,11 @@ export default function AddClassroomCard() {
     const handleSubmit = async () => {
         if (!room) return;
         const res = await createClassroomByRoom(room);
-        if (res) {
+        if (res.success) {
             alert(`Room: ${room} created successfully`)
             return window.location.reload();
         };
-        alert(`Room: ${room} creation failed`);
+        alert(`Room: ${room} creation failed with error: ${res.error}`);
         return window.location.reload();
     }
     return (

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -13,52 +13,71 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+
+import useAllSubjectsStore from '@/stores/useAllSubjectsStore';
+import useAllTeachersStore from '@/stores/useAllTeachersStore';
 import useScheduleStore from '@/stores/useScheduleStore';
-import { Slot } from '@/constructors/Schedule/slot';
-import removeSlot from '@/utils/removeSlot';
+import { slotInputSchema } from '@/lib/validations/slot';
 
-
-export default function ScheduleSlotCell({ day, slotNumber }) {
-    //global stuff 
-    const { stagingSchedule, setStagingSchedule, schedule } = useScheduleStore();
-    const slot = stagingSchedule?.[day]?.find(s => s.slot === slotNumber);
+export default function ScheduleSlotCell({ inputSlot, roomOrTeacher, day, slotNumber }) {
+    //global states
+    const subjects = useAllSubjectsStore((state) => state.subjects) || [];
+    const teachers = useAllTeachersStore((state) => state.teachers) || [];
+    const { schedule, stagingSchedule, setStagingSchedule } = useScheduleStore();
     //local states
-    const [subject, setSubject] = useState(slot?.subject || '');
-    const [room, setRoom] = useState(slot?.room || '');
-    const [type, setType] = useState(slot?.type || '');
-    const [teacher, setTeacher] = useState(slot?.teacher || schedule.name || '');
-    //render the slot with different colors
-    const isTheory = slot?.type === 'theory';
+    const [slot, setSlot] = useState(structuredClone(inputSlot) || null);
+    const [teacher, setTeacher] = useState(slot?.teacher || null);
+    const [room, setRoom] = useState(slot?.room || schedule.room || null);
+    // ensure teacher is set once teachers are available
+    useEffect(() => {
+        if (!teacher && teachers.length && schedule?.name) {
+            const matched = teachers.find((t) => t.name === schedule.name);
+            if (matched) {
+                setTeacher(matched);
+            }
+        }
+    }, [teachers, schedule?.name, teacher, stagingSchedule]);
+    const [subject, setSubject] = useState(slot?.subject || null);
+    //styling
+    const isTheory = slot?.subject?.type === 'theory';
     const bgColor = slot
         ? isTheory
-            ? 'bg-violet-100 border-violet-400'
-            : 'bg-blue-100 border-violet-400'
+            ? 'bg-blue-100 border-violet-400'
+            : 'bg-violet-100 border-violet-400'
         : 'bg-white';
-    //adding changes to local stagedSchedule
+    //submitting the form
     const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            const slotToAdd = new Slot(slotNumber, subject, room, type, teacher);
-            console.log(slotToAdd);
-            const LocalSchedule = structuredClone(stagingSchedule);
-            if (!slot) {
-                if (!LocalSchedule[day]) LocalSchedule[day] = [];
-                LocalSchedule[day].push(slotToAdd);
-                setStagingSchedule(LocalSchedule);
-            }
-        } catch (error) {
-            alert(error);
+        const input = {
+            slot: slotNumber,
+            teacher: {
+                name: teacher.name,
+                code: teacher.code,
+                email: teacher.email
+            },
+            subject: {
+                name: subject.name,
+                code: subject.code,
+                type: subject.type
+            },
+            room
         }
-    };
-    // deleting a slot 
-    const deleteSlot = async () => {
-        try {
-            await removeSlot({ room, day, slot: slotNumber });
-        } catch (error) {
-            alert(error);
+        const validated = slotInputSchema.safeParse(input);
+        if (!validated.success) {
+            alert(validated.error);
+        } else {
+            const updated = structuredClone(stagingSchedule);
+            if (!updated[day]) updated[day] = [];
+            const existingIndex = updated[day].findIndex(s => s.slot === slotNumber);
+            if (existingIndex !== -1) {
+                updated[day][existingIndex] = validated.data;
+            } else {
+                updated[day].push(validated.data);
+            }
+            setStagingSchedule(updated);
+            setSlot(validated.data);
         }
     }
-
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -68,10 +87,12 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                     {slot ? (
                         <>
                             <span className="text-sm text-secondary-foreground leading-tight">
-                                {slot.subject}
+                                {slot.subject.name}
                             </span>
-                            <span className="text-xs text-muted-foreground">{slot.type}</span>
-                            <span className="text-xs text-muted-foreground">{slot.room || slot.teacher}</span>
+                            <span className="text-xs text-muted-foreground">{slot.subject.type}</span>
+                            <span className="text-xs text-muted-foreground">
+                                {roomOrTeacher === 'room' ? slot.teacher?.name : slot.room}
+                            </span>
                         </>
                     ) : (
                         <span className="text-xs text-gray-400 italic">No Class</span>
@@ -84,53 +105,81 @@ export default function ScheduleSlotCell({ day, slotNumber }) {
                     <DialogHeader>
                         <DialogTitle>Edit Slot</DialogTitle>
                         <DialogDescription>
-                            Make changes to the slot. Ensure correct spellings.
+                            Select subject, type, room and teacher. These will be saved to staging.
                         </DialogDescription>
                     </DialogHeader>
 
+                    {/* Subject Dropdown */}
                     <div className='my-2 gap-2 flex flex-col'>
-                        <Label htmlFor="subjectName">Subject Name</Label>
-                        <Input
-                            id="subjectName"
-                            value={subject}
-                            onChange={(e) => setSubject(e.target.value)}
-                            placeholder="Add Subject"
-                        />
-                    </div>
-                    <div className='my-2 gap-2 flex flex-col'>
-                        <Label htmlFor="classroom">Classroom</Label>
-                        <Input
-                            id="classroom"
-                            value={room}
-                            onChange={(e) => setRoom(e.target.value)}
-                            placeholder="Add Classroom"
-                        />
-                    </div>
-                    <div className='my-2 gap-2 flex flex-col'>
-                        <Label htmlFor="subjectType">Type (theory/lab)</Label>
-                        <Input
-                            id="subjectType"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            placeholder="theory / lab"
-                        />
-                    </div>
-                    <div className='my-2 gap-2 flex flex-col'>
-                        <Label htmlFor="teacherName">Teacher Name</Label>
-                        <Input
-                            id="teacherName"
-                            value={teacher}
-                            onChange={(e) => setTeacher(e.target.value)}
-                            placeholder={teacher}
-                        />
+                        <Label htmlFor="subject">Subject</Label>
+                        <select
+                            id="subject"
+                            className="border rounded px-2 py-1"
+                            defaultValue=""
+                            onChange={(e) => {
+                                const selectedSubject = e.target.value?.split(":");
+                                const [selectedCode, selectedType] = selectedSubject;
+                                const fullSubject = subjects.find((s) => (s.code === selectedCode && s.type === selectedType));
+                                setSubject(fullSubject);
+                            }}
+                        >
+                            <option value="" disabled>Select Subject</option>
+                            {subjects.map((s) => (
+                                <option key={`${s.code}-${s.type}`} value={`${s.code}:${s.type}`}>
+                                    {s.name} ({s.code}) - {s.type}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
+                    {/* Classroom */}
+                    {roomOrTeacher === "teacher" ? (
+                        <div className='my-2 gap-2 flex flex-col'>
+                            <Label htmlFor="classroom">Classroom</Label>
+                            <Input
+                                id="classroom"
+                                defaultValue=""
+                                placeholder="Add Classroom"
+                                onChange={(e) => {
+                                    setRoom(e.target.value)
+                                }}
+                            />
+                        </div>
+                    ) : (
+                        <input type="hidden" id="classroom" value={slot?.room || ''} />
+                    )}
+
+                    {/* Teacher Dropdown */}
+                    {roomOrTeacher === "room" && (
+                        <div className='my-2 gap-2 flex flex-col'>
+                            <Label htmlFor="teacher">Teacher</Label>
+                            <select
+                                id="teacher"
+                                className="border rounded px-2 py-1"
+                                value={teacher?.code || ""}
+                                onChange={(e) => {
+                                    const selectedCode = e.target.value;
+                                    const selectedTeacher = teachers.find(t => t.code === selectedCode);
+                                    setTeacher(selectedTeacher || null);
+                                }}
+                            >
+                                <option value="" disabled>Select Teacher</option>
+                                {teachers.map((t) => (
+                                    <option key={t.code} value={t.code}>
+                                        {t.name} ({t.code})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+
                     <DialogFooter>
-                        {schedule.schedule[day].find((s) => s.slot === slotNumber)?.teacher &&
+                        {slot && (
                             <DialogClose asChild>
-                                <Button variant="destructive" onClick={deleteSlot}>Delete</Button>
+                                <Button variant="destructive">Delete</Button>
                             </DialogClose>
-                        }
+                        )}
                         <DialogClose asChild>
                             <Button variant="outline">Cancel</Button>
                         </DialogClose>

@@ -24,7 +24,7 @@ export default function AddSubjectCard() {
         }
 
         try {
-            const res = await createSubject(name, code, type);
+            const res = await createSubject({ name, code, type });
             if (res) {
                 alert(`Subject "${name}" created successfully`);
                 return window.location.reload();
