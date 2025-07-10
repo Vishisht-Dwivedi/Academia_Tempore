@@ -5,9 +5,9 @@ export default async function deleteSubject(code, type) {
     if (!code || !type) throw new Error("Code and type are required");
 
     const { deleteSubject } = await client.request(DeleteSubject, {
-        code: code.trim().toLowerCase(),
+        code: code.trim().toUpperCase(),
         type: type.trim().toLowerCase()
     });
 
-    return deleteSubject.message;
+    return deleteSubject;
 }

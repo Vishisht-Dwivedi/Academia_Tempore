@@ -1,3 +1,6 @@
 mutation DeleteClassroom($room: String!) {
-  deleteClassroom(room: $room)
+  deleteClassroom(room: $room) {
+    message
+    success
+  }
 }

@@ -1,8 +1,7 @@
-import { getClassroom } from "../../classroom/read.js";
 import addBacklink from "../../utils/backlink/addBacklink.js";
-
+import ClassroomModel from "../../../models/Classrooms.js";
 export default async function updateExistingSlot({ day, slot, teacher, subject }) {
-    const classroom = await getClassroom(slot.room);
+    const classroom = await ClassroomModel.findOne({ room: slot.room });
     const daySchedule = classroom.schedule.find(d => d.day === day);
 
     if (!daySchedule) {

@@ -77,131 +77,156 @@ Academia Tempore
 |-- components.json
 |-- eslint.config.mjs
 |-- jsconfig.json
+|-- lib
+|   |-- utils
+|   |   |-- capitalizeString.js
+|   |   |-- lowercaseString.js
+|   |   `-- uppercaseString.js
+|   `-- validations
+|       |-- admin.js
+|       |-- classroom.js
+|       |-- schedule.js
+|       |-- slot.js
+|       |-- subject.js
+|       `-- teacher.js
 |-- next.config.mjs
 |-- package.json
 |-- pnpm-lock.yaml
 |-- postcss.config.cjs
 |-- public
-|   |-- file.svg
-|   |-- globe.svg
-|   |-- next.svg
-|   |-- vercel.svg
-|   -- window.svg
+|   |-- favicon.ico
+|   |-- github_icon.svg
+|   `-- logo.png
 |-- server
-|   |-- constructors
-|   |   |-- classroomConstructor.js
-|   |   |-- scheduleConstructor.js
-|   |   |-- slotConstructor.js
-|   |   |-- subjectConstructor.js
-|   |   |-- teacherConstructor.js
-|   |   -- utils
-|   |       |-- capitalizeString.js
-|   |       -- normalizeString.js
+|   |-- controllers
+|   |   |-- admin.js
+|   |   `-- teacher.js
 |   |-- graphql
 |   |   |-- inputs
 |   |   |   |-- DayScheduleInputType.js
 |   |   |   |-- RemoveSlotInputType.js
 |   |   |   |-- ScheduleInputType.js
 |   |   |   |-- SlotInputNestedType.js
-|   |   |   -- SlotInputType.js
+|   |   |   `-- SlotInputType.js
 |   |   |-- schema.js
-|   |   -- types
+|   |   `-- types
 |   |       |-- Classroom.js
 |   |       |-- Schedule.js
 |   |       |-- Subject.js
-|   |       -- Teacher.js
+|   |       `-- Teacher.js
 |   |-- index.js
 |   |-- models
+|   |   |-- Admins.js
 |   |   |-- Classrooms.js
 |   |   |-- Schedule.js
 |   |   |-- Subjects.js
-|   |   -- Teachers.js
+|   |   `-- Teachers.js
 |   |-- registerModels.js
+|   |-- seeds
+|   |   |-- admins.js
+|   |   |-- classroom_schedule.js
+|   |   |-- seeds.js
+|   |   |-- subjects.js
+|   |   `-- teachers.js
 |   |-- services
+|   |   |-- admins
+|   |   |   |-- create.js
+|   |   |   `-- read.js
+|   |   |-- auth
+|   |   |   |-- generatePayload.js
+|   |   |   `-- readPayload.js
 |   |   |-- classroom
 |   |   |   |-- create.js
 |   |   |   |-- delete.js
 |   |   |   |-- read.js
-|   |   |   -- utils
+|   |   |   `-- utils
 |   |   |       |-- injectRoomId.js
 |   |   |       |-- stripRoomId.js
-|   |   |       -- verifyAndLinkClassroom.js
+|   |   |       `-- verifyAndLinkClassroom.js
 |   |   |-- schedule
 |   |   |   |-- create.js
 |   |   |   |-- delete.js
 |   |   |   |-- slot
-|   |   |   |   -- create.js
+|   |   |   |   `-- create.js
 |   |   |   |-- update.js
-|   |   |   -- utils
+|   |   |   `-- utils
 |   |   |       |-- handleScheduleSlotUpdate.js
 |   |   |       |-- insertNewSlot.js
-|   |   |       -- updateExistingSlot.js
+|   |   |       `-- updateExistingSlot.js
 |   |   |-- subject
 |   |   |   |-- create.js
 |   |   |   |-- delete.js
-|   |   |   -- read.js
+|   |   |   `-- read.js
 |   |   |-- teacher
 |   |   |   |-- create.js
 |   |   |   |-- delete.js
 |   |   |   |-- read.js
-|   |   |   -- utils
-|   |   |       -- getTeacherSchedule.js
-|   |   -- utils
+|   |   |   `-- utils
+|   |   |       `-- getTeacherSchedule.js
+|   |   `-- utils
 |   |       |-- backlink
-|   |       |   -- addBacklink.js
+|   |       |   `-- addBacklink.js
 |   |       |-- collisionDetection
 |   |       |   |-- isClassroomFree.js
-|   |       |   -- isTeacherFree.js
-|   |       -- objToID
+|   |       |   `-- isTeacherFree.js
+|   |       `-- objToID
 |   |           |-- subjectToID.js
-|   |           -- teacherToID.js
-|   -- test.js
+|   |           `-- teacherToID.js
+|   `-- test.js
 |-- src
 |   |-- app
 |   |   |-- dashboard
 |   |   |   |-- classrooms
 |   |   |   |   |-- [roomCode]
-|   |   |   |   |   -- page.jsx
-|   |   |   |   -- page.jsx
+|   |   |   |   |   `-- page.jsx
+|   |   |   |   `-- page.jsx
 |   |   |   |-- layout.jsx
 |   |   |   |-- page.jsx
 |   |   |   |-- subjects
-|   |   |   |   -- page.jsx
-|   |   |   -- teachers
+|   |   |   |   `-- page.jsx
+|   |   |   `-- teachers
 |   |   |       |-- [teacherCode]
-|   |   |       |   -- page.jsx
-|   |   |       -- page.jsx
-|   |   |-- favicon.ico
+|   |   |       |   `-- page.jsx
+|   |   |       `-- page.jsx
 |   |   |-- globals.css
 |   |   |-- layout.js
-|   |   -- page.js
+|   |   |-- login
+|   |   |   `-- [type]
+|   |   |       `-- page.jsx
+|   |   `-- page.js
 |   |-- components
 |   |   |-- app-sidebar.jsx
 |   |   |-- classrooms
 |   |   |   |-- AddCard.jsx
 |   |   |   |-- AllClassrooms.jsx
-|   |   |   -- ScrollContent.jsx
+|   |   |   |-- ClassroomItem.jsx
+|   |   |   `-- ScrollContent.jsx
+|   |   |-- login-form.jsx
 |   |   |-- schedule
 |   |   |   |-- PlotSchedule.jsx
 |   |   |   |-- ScheduleGrid.jsx
 |   |   |   |-- ScheduleHeaderRow.jsx
 |   |   |   |-- ScheduleSlotCell.jsx
-|   |   |   -- utils.js
+|   |   |   `-- utils.js
 |   |   |-- search-form.jsx
 |   |   |-- subjects
 |   |   |   |-- AddCard.jsx
 |   |   |   |-- AllSubjects.jsx
-|   |   |   -- ScrollContent.jsx
+|   |   |   `-- ScrollContent.jsx
 |   |   |-- teachers
 |   |   |   |-- AddCard.jsx
 |   |   |   |-- AllTeachers.jsx
-|   |   |   -- ScrollContent.jsx
-|   |   -- ui
+|   |   |   |-- ScrollContent.jsx
+|   |   |   `-- TeacherItem.jsx
+|   |   `-- ui
+|   |       |-- accordion.jsx
+|   |       |-- avatar.jsx
 |   |       |-- breadcrumb.jsx
 |   |       |-- button.jsx
 |   |       |-- card.jsx
 |   |       |-- collapsible.jsx
 |   |       |-- dialog.jsx
+|   |       |-- dropdown-menu.jsx
 |   |       |-- hover-card.jsx
 |   |       |-- input.jsx
 |   |       |-- label.jsx
@@ -211,24 +236,24 @@ Academia Tempore
 |   |       |-- sidebar.jsx
 |   |       |-- skeleton.jsx
 |   |       |-- spinner.jsx
-|   |       -- tooltip.jsx
+|   |       `-- tooltip.jsx
 |   |-- constructors
 |   |   |-- Schedule
-|   |   |   -- slot.js
+|   |   |   `-- slot.js
 |   |   |-- finalConstructors
 |   |   |   |-- classroomConstructor.js
 |   |   |   |-- scheduleConstructor.js
 |   |   |   |-- slotConstructor.js
 |   |   |   |-- subjectConstructor.js
-|   |   |   -- teacherConstructor.js
-|   |   -- utils
+|   |   |   `-- teacherConstructor.js
+|   |   `-- utils
 |   |       |-- capitalizeString.js
-|   |       -- normalizeString.js
+|   |       `-- normalizeString.js
 |   |-- hooks
-|   |   -- use-mobile.js
+|   |   `-- use-mobile.js
 |   |-- lib
 |   |   |-- graphqlClient.js
-|   |   -- utils.js
+|   |   `-- utils.js
 |   |-- queries
 |   |   |-- allClassrooms.gql
 |   |   |-- allSubjects.gql
@@ -242,10 +267,10 @@ Academia Tempore
 |   |   |-- deleteTeacher.gql
 |   |   |-- removeSlot.gql
 |   |   |-- teacherSchedule.gql
-|   |   -- updateSchedule.gql
+|   |   `-- updateSchedule.gql
 |   |-- stores
-|   |   -- useScheduleStore.js
-|   -- utils
+|   |   `-- useScheduleStore.js
+|   `-- utils
 |       |-- createClassroomByRoom.js
 |       |-- createSubject.js
 |       |-- createTeacher.js
@@ -258,8 +283,10 @@ Academia Tempore
 |       |-- getClasssroomSchedule.js
 |       |-- getTeacherSchedule.js
 |       |-- removeSlot.js
-|       -- updateSchedule.js
--- tailwind.config.js
+|       `-- updateSchedule.js
+`-- tailwind.config.js
+
+51 directories, 161 files
 ```
 
 ---
@@ -274,8 +301,8 @@ Academia Tempore
 ---
 
 ## 💡 Ongoing Work
-
-* ✨ WebSocket-based notification system
+* ✨ Authentication and Authorization
+* ✨ WebHook-based notification system
 * ✨ Constraint optimization engine for auto-generation
 
 ---

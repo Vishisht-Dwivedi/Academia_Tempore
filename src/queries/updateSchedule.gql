@@ -1,6 +1,3 @@
 mutation UpdateSchedule($schedule: ScheduleInput!) {
-  updateSchedule(schedule: $schedule) {
-    success
-    message
-  }
+  updateSchedule(schedule: $schedule)
 }

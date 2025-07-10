@@ -1,6 +1,7 @@
-import { getClassroomByID } from "../../classroom/read.js";
-import { getSubjectByID } from "../../subject/read.js";
-import { getTeacherByID } from "../read.js";
+import { findClassroom } from "../../classroom/read.js";
+import { findSubject } from "../../subject/read.js";
+import { findTeacher } from "../read.js";
+
 const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 class Schedule {
     constructor() {
@@ -20,7 +21,7 @@ function serializeSchedule(schedule) {
     return result;
 }
 export default async function getTeacherSchedule(teacherID) {
-    const teacherDoc = await getTeacherByID(teacherID);
+    const teacherDoc = await findTeacher({ _id: teacherID })
     if (!teacherDoc || !teacherDoc.classes || teacherDoc.classes.length === 0) {
         return serializeSchedule(new Schedule()); // return empty schedule structure
     }
@@ -28,16 +29,23 @@ export default async function getTeacherSchedule(teacherID) {
     const teacherSchedule = new Schedule();
     try {
         for (const classroom of teacherDoc.classes) {
-            const classroomDoc = await getClassroomByID(classroom);
+            const classroomDoc = await findClassroom({ _id: classroom });
             for (const day of classroomDoc.schedule) {
                 for (const slot of day.slots) {
                     if (slot.teacher.toString() === teacherID.toString()) {
-                        const subjectDoc = await getSubjectByID(slot.subject);
+                        const subjectDoc = await findSubject({ _id: slot.subject });
                         teacherSchedule[day.day].set(slot.slot, {
-                            subject: subjectDoc.name,
-                            type: subjectDoc.type,
+                            subject: {
+                                name: subjectDoc.name,
+                                code: subjectDoc.code,
+                                type: subjectDoc.type
+                            },
                             room: classroomDoc.room,
-                            teacher: teacherDoc.name
+                            teacher: {
+                                name: teacherDoc.name,
+                                code: teacherDoc.code,
+                                email: teacherDoc.email
+                            }
                         })
                     }
                 }

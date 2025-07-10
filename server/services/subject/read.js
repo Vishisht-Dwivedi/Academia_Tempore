@@ -1,22 +1,26 @@
 import SubjectModel from "../../models/Subjects.js";
-
-export const getSubjectByID = async (id) => {
-    const subject = await SubjectModel.findById(id).lean();
-    if (!subject) throw new Error(`Subject with ID ${id} not found`);
-    return subject;
-};
-
-export const getSubject = async (name, type) => {
-    const subject = await SubjectModel.findOne({ name, type });
-    if (!subject) throw new Error(`Subject ${name} (${type}) not found`);
+import TeacherModel from "../../models/Teachers.js";
+/**
+ * Finds a subject using any filter (e.g., { _id }, { code, type }, etc.)
+ * @param {Object} filter - Mongoose-compatible filter
+ * @returns {Promise<Object>}
+ */
+export async function findSubject(filter) {
+    const subject = await SubjectModel.findOne(filter).populate("teachers").lean();
+    if (!subject) {
+        throw new Error(`Subject not found for filter: ${JSON.stringify(filter)}`);
+    }
     return subject;
 }
-export const getAllSubjects = async () => {
-    const allSubjects = await SubjectModel.find({}).lean();
-    return allSubjects;
-}
-export const getSubjectByCodeAndType = async ({ code, type }) => {
-    const subject = await SubjectModel.findOne({ code, type }).lean();
-    if (!subject) throw new Error(`Subject ${code} (${type}) not found`);
-    return subject;
+
+
+/**
+ * Returns all subjects (optionally with selected fields)
+ * @param {{ select?: Object }} options
+ * @returns {Promise<Array<Object>>}
+ */
+export async function getAllSubjects({ select = null } = {}) {
+    let query = SubjectModel.find({}).populate("teachers").lean();
+    if (select) query = query.select(select);
+    return await query.lean();
 }

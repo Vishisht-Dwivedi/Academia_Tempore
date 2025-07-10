@@ -1,5 +1,5 @@
-mutation CreateClassroomByRoom($room: String!) {
-  createClassroomByRoom(room: $room) {
+mutation CreateClassroom($classroom: ClassroomInput!) {
+  createClassroom(classroom: $classroom) {
     room
   }
 }

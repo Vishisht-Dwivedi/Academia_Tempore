@@ -1,5 +1,5 @@
 query GetAllClassrooms{
-    classrooms {
-      room
+    allClassrooms {
+    room
   }
 }
