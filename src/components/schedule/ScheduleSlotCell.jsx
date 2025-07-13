@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+
 import useAllSubjectsStore from '@/stores/useAllSubjectsStore';
 import useAllTeachersStore from '@/stores/useAllTeachersStore';
 import useScheduleStore from '@/stores/useScheduleStore';
@@ -78,6 +80,7 @@ export default function ScheduleSlotCell({ inputSlot, roomOrTeacher, day, slotNu
             setSlot(validated.data);
         }
     }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -100,7 +103,7 @@ export default function ScheduleSlotCell({ inputSlot, roomOrTeacher, day, slotNu
                 </div>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className="w-full max-w-lg overflow-visible">
                 <form onSubmit={handleSubmit}>
                     <DialogHeader>
                         <DialogTitle>Edit Slot</DialogTitle>
@@ -110,31 +113,34 @@ export default function ScheduleSlotCell({ inputSlot, roomOrTeacher, day, slotNu
                     </DialogHeader>
 
                     {/* Subject Dropdown */}
-                    <div className='my-2 gap-2 flex flex-col'>
+                    <div className="my-2 gap-2 flex flex-col">
                         <Label htmlFor="subject">Subject</Label>
-                        <select
-                            id="subject"
-                            className="border rounded px-2 py-1"
-                            defaultValue=""
-                            onChange={(e) => {
-                                const selectedSubject = e.target.value?.split(":");
-                                const [selectedCode, selectedType] = selectedSubject;
-                                const fullSubject = subjects.find((s) => (s.code === selectedCode && s.type === selectedType));
+                        <Select
+                            onValueChange={(value) => {
+                                const [selectedCode, selectedType] = value.split(":");
+                                const fullSubject = subjects.find(
+                                    (s) => s.code === selectedCode && s.type === selectedType
+                                );
                                 setSubject(fullSubject);
                             }}
+                            value={subject ? `${subject.code}:${subject.type}` : ""}
                         >
-                            <option value="" disabled>Select Subject</option>
-                            {subjects.map((s) => (
-                                <option key={`${s.code}-${s.type}`} value={`${s.code}:${s.type}`}>
-                                    {s.name} ({s.code}) - {s.type}
-                                </option>
-                            ))}
-                        </select>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Subject" />
+                            </SelectTrigger>
+                            <SelectContent className="w-full">
+                                {subjects.map((s) => (
+                                    <SelectItem key={`${s.code}-${s.type}`} value={`${s.code}:${s.type}`} className="w-full">
+                                        {s.name} ({s.code}) - {s.type}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {/* Classroom */}
                     {roomOrTeacher === "teacher" ? (
-                        <div className='my-2 gap-2 flex flex-col'>
+                        <div className="my-2 gap-2 flex flex-col">
                             <Label htmlFor="classroom">Classroom</Label>
                             <Input
                                 id="classroom"
@@ -151,28 +157,28 @@ export default function ScheduleSlotCell({ inputSlot, roomOrTeacher, day, slotNu
 
                     {/* Teacher Dropdown */}
                     {roomOrTeacher === "room" && (
-                        <div className='my-2 gap-2 flex flex-col'>
+                        <div className="my-2 gap-2 flex flex-col">
                             <Label htmlFor="teacher">Teacher</Label>
-                            <select
-                                id="teacher"
-                                className="border rounded px-2 py-1"
-                                value={teacher?.code || ""}
-                                onChange={(e) => {
-                                    const selectedCode = e.target.value;
-                                    const selectedTeacher = teachers.find(t => t.code === selectedCode);
-                                    setTeacher(selectedTeacher || null);
+                            <Select
+                                onValueChange={(code) => {
+                                    const selected = teachers.find((t) => t.code === code);
+                                    setTeacher(selected || null);
                                 }}
+                                value={teacher?.code || ""}
                             >
-                                <option value="" disabled>Select Teacher</option>
-                                {teachers.map((t) => (
-                                    <option key={t.code} value={t.code}>
-                                        {t.name} ({t.code})
-                                    </option>
-                                ))}
-                            </select>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select Teacher" />
+                                </SelectTrigger>
+                                <SelectContent className="w-full">
+                                    {teachers.map((t) => (
+                                        <SelectItem key={t.code} value={t.code} className="w-full">
+                                            {t.name} ({t.code})
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
                     )}
-
 
                     <DialogFooter>
                         {slot && (
