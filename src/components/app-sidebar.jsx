@@ -36,7 +36,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-
+import { useRouter } from "next/navigation";
 const navMain = [
   {
     title: "Teachers",
@@ -56,9 +56,12 @@ const navMain = [
 ];
 
 export const AppSidebar = React.memo(function AppSidebar(props) {
+  const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = React.useState();
-
+  const logout = async () => {
+    router.push("/logout");
+  }
   React.useEffect(() => {
     async function fetchUser() {
       try {
@@ -178,16 +181,12 @@ export const AppSidebar = React.memo(function AppSidebar(props) {
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="center" className="w-40">
-            <DropdownMenuItem className="cursor-pointer">
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer text-destructive">
+            <DropdownMenuItem className="cursor-pointer text-destructive" onClick={logout}>
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
       <SidebarRail />
     </Sidebar>
   );

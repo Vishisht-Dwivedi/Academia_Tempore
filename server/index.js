@@ -103,7 +103,11 @@ nextApp.prepare().then(async () => {
             return res.status(403).json({ user: null, message: "Invalid or expired token" });
         }
     });
-
+    //logout routes
+    server.get("/logout", (req, res) => {
+        res.clearCookie('user', { path: "/" });
+        res.redirect("/");
+    });
     // Catch-all — handled by Next.js
     server.use((req, res) => {
         return handle(req, res);
